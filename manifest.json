@@ -1,20 +1,47 @@
 {
-  "name": "تقفيلة | شبكة المسوقين",
+  "id": "/taqfeela-chat/index.html",
+  "name": "تقفيلة | شبكة المسوقين المشفرة",
   "short_name": "تقفيلة",
+  "description": "منصة تقفيلة لإدارة عمولات المسوقين والتواصل المشفر",
   "start_url": "./index.html",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#090a0f",
   "theme_color": "#090a0f",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/1160/1160358.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "https://cdn-icons-png.flaticon.com/512/1160/1160358.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1160/1160358.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://via.placeholder.com/1280x720/090a0f/ffffff?text=Taqfeela+Desktop",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "واجهة الشاشة الكبيرة"
+    },
+    {
+      "src": "https://via.placeholder.com/720x1280/090a0f/ffffff?text=Taqfeela+Mobile",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "واجهة الموبايل"
     }
   ]
 }
