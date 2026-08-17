@@ -9,6 +9,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase CDNs (Non-Module for File System Compatibility) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root{--bg-body:#090a0f;--bg-card:#12141c;--bg-input:#0a0b10;--border:#1e2230;--border-focus:#3b82f6;--primary:#2563eb;--accent:#10b981;--gold:#f59e0b;--danger:#ef4444;--text-main:#f3f4f6;--text-muted:#9ca3af;--text-dark:#6b7280;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--font-main:'Readex Pro',sans-serif}
         *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-main);-webkit-tap-highlight-color:transparent}
@@ -174,12 +179,9 @@
         </div>
     </div>
 
-    <!-- MAIN APP SCRIPT -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, limit, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // Firebase Configuration
+    <!-- SCRIPT LOGIC -->
+    <script>
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyACL2nG7OdUuU4HRippr7P46OJpPpDYf5g",
             authDomain: "squadly-bb782.firebaseapp.com",
@@ -189,22 +191,22 @@
             appId: "1:605956538187:web:bac92b0e4f087be0e232ce"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         const ADMIN_PASS = "01224815487";
         let deferredPrompt = null;
         let currentUser = null;
         let activeReplyTarget = null;
 
-        // PWA Installation
+        // PWA Setup
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             document.getElementById('installBanner').classList.add('show');
         });
 
-        window.triggerPWAInstall = function() {
+        function triggerPWAInstall() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choice) => {
@@ -214,39 +216,34 @@
                     deferredPrompt = null;
                 });
             }
-        };
+        }
 
-        // Encryption Helpers
         const encData = (str) => btoa(encodeURIComponent(str));
         const decData = (str) => {
             try { return decodeURIComponent(atob(str)); }
             catch(e) { return str; }
         };
 
-        // Navigation Helper
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
         }
 
-        // Admin Access Prompt
-        window.openAdminPrompt = function() {
+        function openAdminPrompt() {
             const pass = prompt("أدخل كلمة المرور الخاصة بلوحة التحكم:");
             if (pass === ADMIN_PASS) {
                 initAdminView();
             } else if (pass !== null) {
                 alert("كلمة المرور غير صحيحة!");
             }
-        };
+        }
 
-        // Marketer Login
-        window.loginMarketer = function(e) {
+        function loginMarketer(e) {
             e.preventDefault();
             const name = document.getElementById('mName').value.trim();
             const code = document.getElementById('mCode').value.trim().toUpperCase();
 
-            const q = query(collection(db, 'marketers'), where('code', '==', code));
-            onSnapshot(q, (snapshot) => {
+            db.collection('marketers').where('code', '==', code).onSnapshot((snapshot) => {
                 if (snapshot.empty) {
                     alert('الكود التعريفي غير صحيح');
                     return;
@@ -269,14 +266,13 @@
             }, (error) => {
                 alert('حدث خطأ في الاتصال بقاعدة البيانات');
             });
-        };
+        }
 
-        window.logout = function() {
+        function logout() {
             currentUser = null;
             showScreen('authScreen');
-        };
+        }
 
-        // Marketer View Logic
         function initMarketerView() {
             showScreen('marketerScreen');
             document.getElementById('dispName').textContent = currentUser.name;
@@ -287,16 +283,13 @@
             if (currentUser.isLeader) badge.classList.add('leader');
             else badge.classList.remove('leader');
 
-            // Live Balance Listener
-            onSnapshot(doc(db, 'marketers', currentUser.id), (docSnap) => {
-                if (docSnap.exists()) {
+            db.collection('marketers').doc(currentUser.id).onSnapshot((docSnap) => {
+                if (docSnap.exists) {
                     document.getElementById('dispBalance').textContent = `${docSnap.data().balance || 0} ج.م`;
                 }
             });
 
-            // Live Chat Listener
-            const chatQ = query(collection(db, 'chat'), orderBy('timestamp', 'asc'), limit(50));
-            onSnapshot(chatQ, (snapshot) => {
+            db.collection('chat').orderBy('timestamp', 'asc').limit(50).onSnapshot((snapshot) => {
                 const chatContainer = document.getElementById('chatMsgs');
                 chatContainer.innerHTML = '';
                 snapshot.forEach(msgDoc => {
@@ -327,18 +320,18 @@
             });
         }
 
-        window.setReply = function(author, text) {
+        function setReply(author, text) {
             activeReplyTarget = { author, text };
             document.getElementById('replyPreviewText').textContent = `رد على (${author}): ${text.substring(0, 20)}...`;
             document.getElementById('replyPreviewBar').style.display = 'flex';
-        };
+        }
 
-        window.cancelReply = function() {
+        function cancelReply() {
             activeReplyTarget = null;
             document.getElementById('replyPreviewBar').style.display = 'none';
-        };
+        }
 
-        window.sendChat = async function(e) {
+        async function sendChat(e) {
             e.preventDefault();
             const textInput = document.getElementById('msgText');
             const text = textInput.value.trim();
@@ -349,7 +342,7 @@
                 senderCode: currentUser.code,
                 isLeader: currentUser.isLeader || false,
                 textEncrypted: encData(text),
-                timestamp: new Date()
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             if (activeReplyTarget) {
@@ -357,21 +350,20 @@
                 msgObj.replyToText = encData(activeReplyTarget.text);
             }
 
-            await addDoc(collection(db, 'chat'), msgObj);
+            await db.collection('chat').add(msgObj);
             textInput.value = '';
             cancelReply();
-        };
+        }
 
-        window.deleteMyMsg = async function(msgId) {
+        async function deleteMyMsg(msgId) {
             if (confirm("هل تريد حذف هذه الرسالة من الشات؟")) {
-                await deleteDoc(doc(db, 'chat', msgId));
+                await db.collection('chat').doc(msgId).delete();
             }
-        };
+        }
 
-        // Admin View Logic
         function initAdminView() {
             showScreen('adminScreen');
-            onSnapshot(collection(db, 'marketers'), (snapshot) => {
+            db.collection('marketers').onSnapshot((snapshot) => {
                 const tableBody = document.getElementById('marketersTable');
                 const selectList = document.getElementById('selectMarketer');
                 tableBody.innerHTML = '';
@@ -401,7 +393,6 @@
             });
         }
 
-        // Auto Code Generator for New Marketer
         document.getElementById('newMName')?.addEventListener('input', () => {
             if (!document.getElementById('generatedCode').value) {
                 const randomNum = Math.floor(1000 + Math.random() * 9000);
@@ -409,12 +400,12 @@
             }
         });
 
-        window.addMarketer = async function(e) {
+        async function addMarketer(e) {
             e.preventDefault();
             const name = document.getElementById('newMName').value.trim();
             const code = document.getElementById('generatedCode').value.trim();
 
-            await addDoc(collection(db, 'marketers'), {
+            await db.collection('marketers').add({
                 name: name,
                 code: code,
                 balance: 0,
@@ -424,30 +415,30 @@
             document.getElementById('newMName').value = '';
             document.getElementById('generatedCode').value = '';
             alert(`تم إنشاء حساب المسوق بنجاح!\nالاسم: ${name}\nالكود: ${code}`);
-        };
+        }
 
-        window.addCommission = async function(e) {
+        async function addCommission(e) {
             e.preventDefault();
             const mId = document.getElementById('selectMarketer').value;
             const amount = parseFloat(document.getElementById('commAmount').value);
 
             if (!mId) return;
 
-            const mRef = doc(db, 'marketers', mId);
-            await runTransaction(db, async (transaction) => {
+            const mRef = db.collection('marketers').doc(mId);
+            await db.runTransaction(async (transaction) => {
                 const sfDoc = await transaction.get(mRef);
-                if (!sfDoc.exists()) return;
+                if (!sfDoc.exists) return;
                 const newBalance = (sfDoc.data().balance || 0) + amount;
                 transaction.update(mRef, { balance: newBalance });
             });
 
             document.getElementById('clientName').value = '';
             alert('تمت إضافة العمولة فوراً لحساب المسوق!');
-        };
+        }
 
-        window.toggleLeader = async function(mId, newStatus) {
-            await updateDoc(doc(db, 'marketers', mId), { isLeader: newStatus });
-        };
+        async function toggleLeader(mId, newStatus) {
+            await db.collection('marketers').doc(mId).update({ isLeader: newStatus });
+        }
     </script>
 </body>
 </html>
