@@ -36,7 +36,19 @@
             --font-main: 'Readex Pro', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
+        /* ANTI-COPY & ANTI-LEAK SECURITY */
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: var(--font-main); 
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none; 
+            -webkit-user-select: none; 
+        }
+
+        input, textarea, button { user-select: text; -webkit-user-select: text; }
+
         body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
 
         .screen { display: none; width: 100%; }
@@ -54,6 +66,7 @@
         .form-control:focus { border-color: var(--border-focus); }
 
         .btn { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; }
+        .btn-success { background: var(--accent); }
         .version-tag { text-align: center; margin-top: 20px; font-size: 11px; color: var(--text-dark); cursor: pointer; }
 
         .app-layout { max-width: 1000px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
@@ -68,6 +81,10 @@
         .balance-label { font-size: 12px; color: var(--text-muted); }
         .balance-val { font-size: 24px; font-weight: 700; color: var(--accent); margin-top: 4px; }
 
+        /* PINNED MESSAGE BANNER */
+        .pinned-banner { display: none; background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); padding: 10px 14px; border-radius: var(--radius-md); margin-bottom: 12px; font-size: 12px; color: var(--gold); }
+        .pinned-banner.active { display: flex; justify-content: space-between; align-items: center; }
+
         .chat-tabs { display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .tab-btn { padding: 8px 14px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; font-weight: 500; border-radius: var(--radius-sm); }
         .tab-btn.active { background: rgba(37,99,235,.15); color: var(--primary); font-weight: 600; }
@@ -80,9 +97,10 @@
 
         .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
         .msg-sender { font-weight: 600; color: var(--primary); font-size: 12px; cursor: pointer; text-decoration: underline; }
+        .msg-time { font-size: 10px; color: var(--text-dark); margin-right: 6px; }
 
         .msg-menu-btn { cursor: pointer; font-weight: bold; padding: 2px 6px; font-size: 14px; color: var(--text-muted); border-radius: 4px; }
-        .msg-dropdown { display: none; position: absolute; top: 28px; left: 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: 0 4px 12px rgba(0,0,0,.5); z-index: 10; width: 150px; overflow: hidden; }
+        .msg-dropdown { display: none; position: absolute; top: 28px; left: 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: 0 4px 12px rgba(0,0,0,.5); z-index: 10; width: 160px; overflow: hidden; }
         .msg-dropdown.show { display: block; }
         .dropdown-item { padding: 8px 12px; font-size: 11px; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 6px; }
         .dropdown-item:hover { background: rgba(37,99,235,.2); }
@@ -96,13 +114,13 @@
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); align-items: center; justify-content: center; z-index: 100; }
         .modal.active { display: flex; }
-        .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; width: 90%; max-width: 360px; }
+        .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; width: 90%; max-width: 380px; }
         .modal-header { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .seen-list { max-height: 200px; overflow-y: auto; font-size: 12px; }
         .seen-item { padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; color: var(--text-muted); }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
     <!-- AUTH SCREEN -->
     <div id="authScreen" class="screen active">
@@ -123,7 +141,7 @@
                 </div>
                 <button type="submit" class="btn">دخول اللوحة</button>
             </form>
-            <div class="version-tag" onclick="handleSecretAdminClick()">إصدار النظام v2.3.0</div>
+            <div class="version-tag" onclick="handleSecretAdminClick()">إصدار النظام v3.0.0</div>
         </div>
     </div>
 
@@ -142,6 +160,7 @@
                 <div class="balance-box">
                     <div class="balance-label">الرصيد الحالي</div>
                     <div class="balance-val" id="dispBalance">0 ج.م</div>
+                    <button class="btn btn-success" style="margin-top:10px; font-size:12px; padding:8px;" onclick="openWithdrawModal()">💸 طلب سحب الرصيد</button>
                 </div>
 
                 <div class="form-group">
@@ -152,6 +171,12 @@
             </div>
 
             <div class="main-card">
+                <!-- PINNED MESSAGE DISPLAY -->
+                <div id="pinnedBanner" class="pinned-banner">
+                    <div>📌 <b id="pinnedText">--</b></div>
+                    <span id="unpinBtn" style="cursor:pointer; font-size:11px;" onclick="unpinMessage()">إلغاء التثبيت</span>
+                </div>
+
                 <div class="chat-tabs">
                     <button class="tab-btn active" id="tabPublic" onclick="switchChatTab('public')">🌐 الشات العام</button>
                     <button class="tab-btn" id="tabPrivate" onclick="switchChatTab('private')">💬 شات خاص <span id="dmTargetLabel"></span></button>
@@ -160,7 +185,7 @@
                 <div id="publicChatView" class="chat-container">
                     <div class="chat-messages" id="chatMsgs"></div>
                     <form style="display:flex; gap:8px;" onsubmit="sendPublicChat(event)">
-                        <input type="text" id="msgText" class="form-control" placeholder="اكتب رسالتك أو ضع رابط فيديو..." required>
+                        <input type="text" id="msgText" class="form-control" placeholder="اكتب رسالتك أو ضِع رابط فيديو..." required>
                         <button type="submit" class="btn" style="width: 80px;">إرسال</button>
                     </form>
                 </div>
@@ -181,9 +206,38 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span>معلومات الرسالة (من شاهدها)</span>
-                <span style="cursor:pointer;" onclick="closeModal()">✕</span>
+                <span style="cursor:pointer;" onclick="closeModal('infoModal')">✕</span>
             </div>
             <div id="seenList" class="seen-list"></div>
+        </div>
+    </div>
+
+    <!-- MODAL FOR WITHDRAWAL REQUEST -->
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>طلب سحب الرصيد</span>
+                <span style="cursor:pointer;" onclick="closeModal('withdrawModal')">✕</span>
+            </div>
+            <form onsubmit="submitWithdraw(event)">
+                <div class="form-group">
+                    <label>طريقة السحب</label>
+                    <select id="wMethod" class="form-control">
+                        <option value="فودافون كاش">فودافون كاش</option>
+                        <option value="انستا باي">إنستا باي (InstaPay)</option>
+                        <option value="حساب بنكي">حساب بنكي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>رقم المحفظة / العنوان</label>
+                    <input type="text" id="wDetails" class="form-control" placeholder="010xxxxxxx أو IPA" required>
+                </div>
+                <div class="form-group">
+                    <label>المبلغ المطلوب</label>
+                    <input type="number" id="wAmount" class="form-control" placeholder="أدخل المبلغ" required>
+                </div>
+                <button type="submit" class="btn btn-success">إرسال الطلب</button>
+            </form>
         </div>
     </div>
 
@@ -206,23 +260,18 @@
         const encData = (str) => btoa(encodeURIComponent(str));
         const decData = (str) => { try { return decodeURIComponent(atob(str)); } catch(e) { return str; } };
 
-        // --- SMART PHONE FILTER ENGINE ---
+        function formatTime(timestamp) {
+            if (!timestamp) return '';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+        }
+
         function containsPhoneNumber(text) {
-            // 1. If user is Leader or Admin, bypass filter
             if (currentUser && currentUser.isLeader) return false;
-
-            // 2. Clean text from spaces, hyphens, and dots to detect trick attempts like (010 123 4567)
             const cleanText = text.replace(/[\s\-\.\_\,\/\\()\+]/g, '');
-
-            // 3. Strict Egyptian Phone Patterns (010, 011, 012, 015)
             const egPhoneRegex = /(010|011|012|015)[0-9]{8}/;
-            if (egPhoneRegex.test(cleanText)) return true;
-
-            // 4. Any continuous sequence of 10 to 11 digits that looks like a phone number
             const generalPhoneRegex = /[0-9]{10,11}/;
-            if (generalPhoneRegex.test(cleanText)) return true;
-
-            return false;
+            return egPhoneRegex.test(cleanText) || generalPhoneRegex.test(cleanText);
         }
 
         function showScreen(screenId) {
@@ -256,6 +305,11 @@
             document.getElementById('dispBadge').textContent = currentUser.isLeader ? 'ليدر الفريق' : 'مسوق';
             if (currentUser.nickname) document.getElementById('mNickInput').value = currentUser.nickname;
 
+            db.collection('marketers').doc(currentUser.id).onSnapshot((docSnap) => {
+                if (docSnap.exists) document.getElementById('dispBalance').textContent = `${docSnap.data().balance || 0} ج.م`;
+            });
+
+            listenPinnedMessage();
             loadPublicChat();
         }
 
@@ -266,6 +320,30 @@
                 document.getElementById('dispName').textContent = nick ? `${currentUser.name} (${nick})` : currentUser.name;
                 alert("تم حفظ الكنية بنجاح!");
             });
+        }
+
+        // --- PINNED MESSAGE ENGINE ---
+        function listenPinnedMessage() {
+            db.collection('settings').doc('pinned').onSnapshot(docSnap => {
+                const banner = document.getElementById('pinnedBanner');
+                if (docSnap.exists && docSnap.data().text) {
+                    document.getElementById('pinnedText').textContent = docSnap.data().text;
+                    banner.classList.add('active');
+                    document.getElementById('unpinBtn').style.display = (currentUser && currentUser.isLeader) ? 'inline' : 'none';
+                } else {
+                    banner.classList.remove('active');
+                }
+            });
+        }
+
+        async function pinMessage(text) {
+            if (!currentUser.isLeader) return alert("ميزة التثبيت مخصصة لليدر فقط");
+            await db.collection('settings').doc('pinned').set({ text: text });
+            alert("تم تثبيت الرسالة بنجاح!");
+        }
+
+        async function unpinMessage() {
+            await db.collection('settings').doc('pinned').delete();
         }
 
         function parseMediaAndText(text) {
@@ -300,6 +378,7 @@
                     const isMe = currentUser && currentUser.id === data.senderId;
                     const rawText = decData(data.textEncrypted || '');
                     const { textHtml, videoEmbed } = parseMediaAndText(rawText);
+                    const timeStr = formatTime(data.timestamp);
 
                     const displayName = data.senderNickname ? `${data.senderName} (${data.senderNickname})` : data.senderName;
 
@@ -308,7 +387,10 @@
                     
                     msgDiv.innerHTML = `
                         <div class="msg-header">
-                            <span class="msg-sender" onclick="startPrivateChat('${data.senderId}', '${displayName}')">${displayName} 💬</span>
+                            <div>
+                                <span class="msg-sender" onclick="startPrivateChat('${data.senderId}', '${displayName}')">${displayName} 💬</span>
+                                <span class="msg-time">${timeStr}</span>
+                            </div>
                             <span class="msg-menu-btn" onclick="toggleMsgMenu(event, '${msgId}')">⋮</span>
                         </div>
                         <div>${textHtml}</div>
@@ -316,6 +398,7 @@
 
                         <div id="menu-${msgId}" class="msg-dropdown">
                             <div class="dropdown-item" onclick="openMsgInfo('${msgId}')">ℹ️ معلومات الرسالة</div>
+                            ${currentUser.isLeader ? `<div class="dropdown-item" onclick="pinMessage('${rawText}')">📌 تثبيت الرسالة</div>` : ''}
                         </div>
                     `;
                     chatContainer.appendChild(msgDiv);
@@ -375,7 +458,6 @@
             const text = input.value.trim();
             if (!text || !activeDmTarget) return;
 
-            // CHECK PHONE FILTER FOR PRIVATE MESSAGES
             if (containsPhoneNumber(text)) {
                 return alert("⚠️ يمنع إرسال أرقام الهواتف حفاظاً على خصوصية الشبكة.");
             }
@@ -395,7 +477,6 @@
             const text = textInput.value.trim();
             if (!text) return;
 
-            // CHECK PHONE FILTER FOR PUBLIC CHAT
             if (containsPhoneNumber(text)) {
                 return alert("⚠️ يمنع إرسال أرقام الهواتف في الشات العام.");
             }
@@ -409,6 +490,29 @@
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
             textInput.value = '';
+        }
+
+        // --- WITHDRAWAL SYSTEM ---
+        function openWithdrawModal() {
+            document.getElementById('withdrawModal').classList.add('active');
+        }
+
+        async function submitWithdraw(e) {
+            e.preventDefault();
+            const method = document.getElementById('wMethod').value;
+            const details = document.getElementById('wDetails').value.trim();
+            const amount = parseFloat(document.getElementById('wAmount').value);
+
+            await db.collection('withdrawals').add({
+                marketerId: currentUser.id,
+                marketerName: currentUser.name,
+                method, details, amount,
+                status: 'قيد الانتظار',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            alert("تم إرسال طلب السحب بنجاح إلى الإدارة!");
+            closeModal('withdrawModal');
         }
 
         function openMsgInfo(msgId) {
@@ -427,8 +531,8 @@
             });
         }
 
-        function closeModal() {
-            document.getElementById('infoModal').classList.remove('active');
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
         }
     </script>
 </body>
