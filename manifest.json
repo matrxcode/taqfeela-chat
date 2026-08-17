@@ -1,26 +1,15 @@
 {
+  "name": "تقفيلة | شبكة المسوقين",
   "short_name": "تقفيلة",
-  "name": "تقفيلة | شبكة المسوقين المشفرة",
-  "description": "منصة تقفيلة لإدارة عمولات المسوقين والتواصل المشفر",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "any maskable"
-    }
-  ],
   "start_url": "./index.html",
+  "display": "standalone",
   "background_color": "#090a0f",
   "theme_color": "#090a0f",
-  "display": "standalone",
-  "orientation": "portrait",
-  "dir": "rtl",
-  "lang": "ar"
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1160/1160358.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
