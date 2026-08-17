@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تقفيلة | شبكة المسوقين المشفرة</title>
+    <title>تقفيلة | شبكة المسوقين المشفرة الشاملة</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#090a0f">
@@ -36,20 +36,10 @@
             --font-main: 'Readex Pro', sans-serif;
         }
 
-        /* ANTI-COPY & SECURITY */
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-            font-family: var(--font-main); 
-            -webkit-tap-highlight-color: transparent; 
-            user-select: none; 
-            -webkit-user-select: none; 
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
         input, textarea, button, select { user-select: text; -webkit-user-select: text; }
 
-        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; }
 
         .screen { display: none; width: 100%; }
         .screen.active { display: block; }
@@ -65,12 +55,13 @@
         .form-control { width: 100%; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; color: var(--text-main); font-size: 14px; outline: none; }
         .form-control:focus { border-color: var(--border-focus); }
 
-        .btn { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; }
+        .btn { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; text-align: center; }
         .btn-success { background: var(--accent); }
         .btn-danger { background: var(--danger); }
+        .btn-gold { background: var(--gold); color: #000; }
         .version-tag { text-align: center; margin-top: 20px; font-size: 11px; color: var(--text-dark); cursor: pointer; }
 
-        .app-layout { max-width: 1000px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+        .app-layout { max-width: 1150px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
         @media(max-width: 850px) { .app-layout { grid-template-columns: 1fr; } }
 
         .sidebar-card, .main-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
@@ -78,20 +69,20 @@
         .profile-name { font-weight: 600; font-size: 16px; }
         .profile-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 12px; background: rgba(255,255,255,.05); color: var(--text-muted); margin-top: 4px; border: 1px solid var(--border); }
 
-        .code-box { background: rgba(37,99,235,.1); border: 1px dashed var(--primary); border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px; text-align: center; }
+        .code-box { background: rgba(37,99,235,.1); border: 1px dashed var(--primary); border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px; text-align: center; position: relative; }
         .code-title { font-size: 11px; color: var(--text-muted); }
-        .code-val { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; margin-top: 2px; }
+        .code-val { font-size: 18px; font-weight: 700; color: var(--primary); letter-spacing: 1px; margin: 4px 0; }
+        .code-timer { font-size: 10px; color: var(--gold); }
 
         .balance-box { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; }
         .balance-label { font-size: 12px; color: var(--text-muted); }
         .balance-val { font-size: 24px; font-weight: 700; color: var(--accent); margin-top: 4px; }
 
-        /* PINNED MESSAGE BANNER */
         .pinned-banner { display: none; background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); padding: 10px 14px; border-radius: var(--radius-md); margin-bottom: 12px; font-size: 12px; color: var(--gold); }
         .pinned-banner.active { display: flex; justify-content: space-between; align-items: center; }
 
-        .chat-tabs { display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .tab-btn { padding: 8px 14px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; font-weight: 500; border-radius: var(--radius-sm); }
+        .chat-tabs { display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; overflow-x: auto; }
+        .tab-btn { padding: 8px 12px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 12px; font-weight: 500; border-radius: var(--radius-sm); whitespace: nowrap; }
         .tab-btn.active { background: rgba(37,99,235,.15); color: var(--primary); font-weight: 600; }
 
         .chat-container { display: flex; flex-direction: column; height: 480px; }
@@ -104,21 +95,14 @@
         .msg-sender { font-weight: 600; color: var(--primary); font-size: 12px; cursor: pointer; text-decoration: underline; }
         .msg-time { font-size: 10px; color: var(--text-dark); margin-right: 6px; }
 
-        .msg-menu-btn { cursor: pointer; font-weight: bold; padding: 2px 6px; font-size: 14px; color: var(--text-muted); border-radius: 4px; }
-        .msg-dropdown { display: none; position: absolute; top: 28px; left: 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: 0 4px 12px rgba(0,0,0,.5); z-index: 10; width: 160px; overflow: hidden; }
-        .msg-dropdown.show { display: block; }
-        .dropdown-item { padding: 8px 12px; font-size: 11px; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        .dropdown-item:hover { background: rgba(37,99,235,.2); }
+        .msg-img { max-width: 100%; border-radius: var(--radius-sm); margin-top: 6px; border: 1px solid var(--border); }
+        .msg-audio { width: 100%; margin-top: 6px; height: 32px; }
 
-        .video-container { margin-top: 8px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); background: #000; }
-        .video-container iframe { width: 100%; height: 200px; border: none; display: block; }
-
-        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-input); color: var(--text-main); cursor: pointer; }
+        .btn-sm { padding: 6px 12px; font-size: 11px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-input); color: var(--text-main); cursor: pointer; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .logout-link { font-size: 12px; color: var(--danger); cursor: pointer; }
 
-        /* ADMIN PANEL STYLES */
-        .admin-layout { max-width: 900px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
+        .admin-layout { max-width: 1000px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
         .table-responsive { width: 100%; overflow-x: auto; margin-top: 16px; }
         table { width: 100%; border-collapse: collapse; text-align: right; font-size: 13px; }
         th, td { padding: 12px; border-bottom: 1px solid var(--border); }
@@ -126,10 +110,12 @@
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); align-items: center; justify-content: center; z-index: 100; }
         .modal.active { display: flex; }
-        .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; width: 90%; max-width: 380px; }
+        .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; width: 90%; max-width: 420px; }
         .modal-header { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .seen-list { max-height: 200px; overflow-y: auto; font-size: 12px; }
-        .seen-item { padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; color: var(--text-muted); }
+
+        .asset-card { background: var(--bg-input); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius-md); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .ticket-box { background: var(--bg-input); border: 1px solid var(--border); padding: 12px; border-radius: var(--radius-md); margin-bottom: 10px; }
+        .badge-status { font-size: 10px; padding: 2px 6px; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -153,7 +139,7 @@
                 </div>
                 <button type="submit" class="btn">دخول اللوحة</button>
             </form>
-            <div class="version-tag" onclick="handleSecretAdminClick()">إصدار النظام v3.1.0</div>
+            <div class="version-tag" onclick="handleSecretAdminClick()">إصدار النظام v4.0.0 الشامل</div>
         </div>
     </div>
 
@@ -169,10 +155,12 @@
                     <div id="dispBadge" class="profile-badge">مسوق</div>
                 </div>
 
-                <!-- DAILY CODE DISPLAY -->
+                <!-- DAILY CODE & TIMER & QUICK COPY -->
                 <div class="code-box">
-                    <div class="code-title">كود اليوم الخاص بك (متغير 24 ساعة)</div>
+                    <div class="code-title">كود اليوم الخاص بك (متغير كل 24 ساعة)</div>
                     <div class="code-val" id="dispDailyCode">----</div>
+                    <div class="code-timer" id="codeCountdown">باقي --:--:-- على كود الغد</div>
+                    <button class="btn-sm" style="width:100%; margin-top:8px;" onclick="copyDailyCode()">📋 نسخ كود اليوم</button>
                 </div>
                 
                 <div class="balance-box">
@@ -196,24 +184,53 @@
                 </div>
 
                 <div class="chat-tabs">
-                    <button class="tab-btn active" id="tabPublic" onclick="switchChatTab('public')">🌐 الشات العام</button>
-                    <button class="tab-btn" id="tabPrivate" onclick="switchChatTab('private')">💬 شات خاص <span id="dmTargetLabel"></span></button>
+                    <button class="tab-btn active" id="tabPublic" onclick="switchView('public')">🌐 الشات العام</button>
+                    <button class="tab-btn" id="tabPrivate" onclick="switchView('private')">💬 خاص <span id="dmTargetLabel"></span></button>
+                    <button class="tab-btn" id="tabLeaderboard" onclick="switchView('leaderboard')">🏆 الأوائل</button>
+                    <button class="tab-btn" id="tabMedia" onclick="switchView('media')">📁 المكتبة والملفات</button>
+                    <button class="tab-btn" id="tabSupport" onclick="switchView('support')">🎫 الدعم الفني</button>
                 </div>
 
+                <!-- PUBLIC CHAT VIEW -->
                 <div id="publicChatView" class="chat-container">
                     <div class="chat-messages" id="chatMsgs"></div>
-                    <form style="display:flex; gap:8px;" onsubmit="sendPublicChat(event)">
-                        <input type="text" id="msgText" class="form-control" placeholder="اكتب رسالتك أو ضِع رابط فيديو..." required>
-                        <button type="submit" class="btn" style="width: 80px;">إرسال</button>
+                    <form style="display:flex; gap:6px; align-items:center;" onsubmit="sendPublicChat(event)">
+                        <input type="text" id="msgText" class="form-control" placeholder="اكتب رسالة أو رابط..." required>
+                        <input type="file" id="imgUpload" accept="image/*" style="display:none;" onchange="handleImageUpload(event, 'public')">
+                        <button type="button" class="btn-sm" onclick="document.getElementById('imgUpload').click()">📷</button>
+                        <button type="button" id="recordBtn" class="btn-sm" onclick="toggleAudioRecording('public')">🎙️</button>
+                        <button type="submit" class="btn" style="width: 70px;">إرسال</button>
                     </form>
                 </div>
 
+                <!-- PRIVATE CHAT VIEW -->
                 <div id="privateChatView" class="chat-container" style="display:none;">
                     <div class="chat-messages" id="dmMsgs"></div>
-                    <form style="display:flex; gap:8px;" onsubmit="sendPrivateChat(event)">
+                    <form style="display:flex; gap:6px; align-items:center;" onsubmit="sendPrivateChat(event)">
                         <input type="text" id="dmMsgText" class="form-control" placeholder="رسالة خاصة..." required>
-                        <button type="submit" class="btn" style="width: 80px;">إرسال</button>
+                        <button type="submit" class="btn" style="width: 70px;">إرسال</button>
                     </form>
+                </div>
+
+                <!-- LEADERBOARD VIEW -->
+                <div id="leaderboardView" style="display:none; padding:10px;">
+                    <h3 style="margin-bottom:12px;">🏆 لوحة صدارة المسوقين هذا الشهر</h3>
+                    <div id="leaderboardList"></div>
+                </div>
+
+                <!-- MEDIA ASSETS VIEW -->
+                <div id="mediaView" style="display:none; padding:10px;">
+                    <h3 style="margin-bottom:12px;">📁 مكتبة المواد التسويقية الجاهزة</h3>
+                    <div id="mediaList"></div>
+                </div>
+
+                <!-- SUPPORT TICKETS VIEW -->
+                <div id="supportView" style="display:none; padding:10px;">
+                    <div class="flex-between" style="margin-bottom:12px;">
+                        <h3>🎫 تذاكر الدعم الفني</h3>
+                        <button class="btn-sm" onclick="openNewTicketModal()">➕ فتح تذكرة جديدة</button>
+                    </div>
+                    <div id="ticketsList"></div>
                 </div>
             </div>
         </div>
@@ -225,65 +242,101 @@
             <div class="flex-between" style="margin-bottom:20px;">
                 <h2>⚙️ لوحة تحكم الأدمن والليدر</h2>
                 <div>
-                    <button class="btn-sm" onclick="changeAdminPassword()" style="margin-left: 8px;">🔑 تغيير كلمة السر</button>
+                    <button class="btn-sm" onclick="changeAdminPassword()" style="margin-left: 6px;">🔑 تغيير السر</button>
                     <button class="btn-sm" onclick="logout()">خروج</button>
                 </div>
             </div>
 
-            <!-- ADD MARKETER FORM -->
-            <div style="background:var(--bg-input); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
-                <h4 style="margin-bottom:10px;">➕ إضافة مسوق جديد</h4>
-                <form style="display:grid; grid-template-columns: 1fr 1fr 100px; gap:10px;" onsubmit="addNewMarketer(event)">
-                    <input type="text" id="newMName" class="form-control" placeholder="الاسم الثنائي" required>
-                    <input type="text" id="newMCode" class="form-control" placeholder="الكود الأساسي (مثال: M-101)" required>
-                    <button type="submit" class="btn">إضافة</button>
-                </form>
+            <!-- TABS FOR ADMIN PANEL -->
+            <div class="chat-tabs" style="margin-bottom:16px;">
+                <button class="tab-btn active" id="admTabMarketers" onclick="switchAdminTab('marketers')">👥 المسوقين</button>
+                <button class="tab-btn" id="admTabWithdraws" onclick="switchAdminTab('withdraws')">💸 طلبات السحب</button>
+                <button class="tab-btn" id="admTabMedia" onclick="switchAdminTab('media')">📁 رفع ميديا</button>
+                <button class="tab-btn" id="admTabTickets" onclick="switchAdminTab('tickets')">🎫 تذاكر الدعم</button>
+                <button class="tab-btn" id="admTabLogs" onclick="switchAdminTab('logs')">📜 سجل النشاطات</button>
             </div>
 
-            <!-- MARKETERS LIST -->
-            <h3>👥 قائمة المسوقين والعمولات والأكواد</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>الاسم</th>
-                            <th>الكود الأساسي</th>
-                            <th>كود اليوم (24h)</th>
-                            <th>الرصيد الحالي</th>
-                            <th>إجراءات الإدارة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminMarketersTable"></tbody>
-                </table>
+            <!-- ADMIN: MARKETERS MANAGEMENT -->
+            <div id="admMarketersSec">
+                <div style="background:var(--bg-input); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
+                    <h4 style="margin-bottom:10px;">➕ إضافة مسوق جديد</h4>
+                    <form style="display:grid; grid-template-columns: 1fr 1fr 100px; gap:10px;" onsubmit="addNewMarketer(event)">
+                        <input type="text" id="newMName" class="form-control" placeholder="الاسم الثنائي" required>
+                        <input type="text" id="newMCode" class="form-control" placeholder="الكود الأساسي (مثال: M-101)" required>
+                        <button type="submit" class="btn">إضافة</button>
+                    </form>
+                </div>
+                <h3>👥 قائمة المسوقين والحظر والعمولات</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الكود</th>
+                                <th>كود اليوم</th>
+                                <th>الرصيد</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminMarketersTable"></tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- WITHDRAWAL REQUESTS -->
-            <h3 style="margin-top:30px;">💸 طلبات سحب الأرباح</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>المسوق</th>
-                            <th>المبلغ</th>
-                            <th>الوسيلة والتفاصيل</th>
-                            <th>الحالة</th>
-                            <th>إجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminWithdrawalsTable"></tbody>
-                </table>
+            <!-- ADMIN: WITHDRAWALS -->
+            <div id="admWithdrawsSec" style="display:none;">
+                <h3>💸 طلبات سحب الأرباح</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>المسوق</th>
+                                <th>المبلغ</th>
+                                <th>التفاصيل</th>
+                                <th>الحالة</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminWithdrawalsTable"></tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- MODAL POPUP FOR MESSAGE INFO -->
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>معلومات الرسالة (من شاهدها)</span>
-                <span style="cursor:pointer;" onclick="closeModal('infoModal')">✕</span>
+            <!-- ADMIN: MEDIA STORAGE -->
+            <div id="admMediaSec" style="display:none;">
+                <div style="background:var(--bg-input); padding:16px; border-radius:var(--radius-md); margin-bottom:20px;">
+                    <h4 style="margin-bottom:10px;">➕ إضافة ملف أو مادة تسويقية</h4>
+                    <form onsubmit="addMediaAsset(event)">
+                        <div class="form-group"><input type="text" id="assetTitle" class="form-control" placeholder="عنوان المادة (مثال: صور منتج x)" required></div>
+                        <div class="form-group"><input type="url" id="assetUrl" class="form-control" placeholder="رابط الملف / الصور (Google Drive / Dropbox...)" required></div>
+                        <button type="submit" class="btn btn-success">إضافة للمكتبة</button>
+                    </form>
+                </div>
             </div>
-            <div id="seenList" class="seen-list"></div>
+
+            <!-- ADMIN: SUPPORT TICKETS -->
+            <div id="admTicketsSec" style="display:none;">
+                <h3>🎫 إدارة تذاكر الدعم الفني</h3>
+                <div id="adminTicketsList" style="margin-top:12px;"></div>
+            </div>
+
+            <!-- ADMIN: AUDIT LOGS -->
+            <div id="admLogsSec" style="display:none;">
+                <h3>📜 سجل نشاطات الإدارة (Audit Logs)</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>التاريخ والوقت</th>
+                                <th>الحدث / النشاط</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminLogsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -303,15 +356,24 @@
                         <option value="حساب بنكي">حساب بنكي</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>رقم المحفظة / العنوان</label>
-                    <input type="text" id="wDetails" class="form-control" placeholder="010xxxxxxx أو IPA" required>
-                </div>
-                <div class="form-group">
-                    <label>المبلغ المطلوب</label>
-                    <input type="number" id="wAmount" class="form-control" placeholder="أدخل المبلغ" required>
-                </div>
+                <div class="form-group"><label>رقم المحفظة / العنوان</label><input type="text" id="wDetails" class="form-control" required></div>
+                <div class="form-group"><label>المبلغ المطلوب</label><input type="number" id="wAmount" class="form-control" required></div>
                 <button type="submit" class="btn btn-success">إرسال الطلب</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL FOR NEW SUPPORT TICKET -->
+    <div id="ticketModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>فتح تذكرة دعم جديدة</span>
+                <span style="cursor:pointer;" onclick="closeModal('ticketModal')">✕</span>
+            </div>
+            <form onsubmit="submitNewTicket(event)">
+                <div class="form-group"><label>عنوان الموضوع</label><input type="text" id="tSubject" class="form-control" required></div>
+                <div class="form-group"><label>تفاصيل المشكلة / الاستفسار</label><textarea id="tBody" class="form-control" rows="3" required></textarea></div>
+                <button type="submit" class="btn">إرسال التذكرة</button>
             </form>
         </div>
     </div>
@@ -333,20 +395,49 @@
         let activeDmTarget = null;
         let adminClickCount = 0;
         let adminClickTimer = null;
+        let mediaRecorder = null;
+        let audioChunks = [];
 
         const encData = (str) => btoa(encodeURIComponent(str));
         const decData = (str) => { try { return decodeURIComponent(atob(str)); } catch(e) { return str; } };
 
-        // --- 24-HOUR DYNAMIC CODE GENERATOR ---
+        // --- PUSH NOTIFICATIONS REQUEST ---
+        if ("Notification" in window && Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+
+        function triggerNotification(title, body) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { body, icon: '🔒' });
+            }
+        }
+
+        // --- DYNAMIC CODE & COUNTDOWN TIMER ---
         function generateDailyCode(baseCode) {
-            const todayStr = new Date().toISOString().slice(0,10); // YYYY-MM-DD
+            const todayStr = new Date().toISOString().slice(0,10);
             let hash = 0;
             const str = baseCode + todayStr;
-            for (let i = 0; i < str.length; i++) {
-                hash = str.charCodeAt(i) + ((hash << 5) - hash);
-            }
-            const suffix = Math.abs(hash % 9000) + 1000; // 4 digits
-            return `${baseCode}-${suffix}`;
+            for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            return `${baseCode}-${Math.abs(hash % 9000) + 1000}`;
+        }
+
+        function startCodeCountdown() {
+            setInterval(() => {
+                const now = new Date();
+                const midnight = new Date();
+                midnight.setHours(24, 0, 0, 0);
+                const diff = midnight - now;
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const mins = Math.floor((diff / 1000 / 60) % 60);
+                const secs = Math.floor((diff / 1000) % 60);
+                document.getElementById('codeCountdown').textContent = `باقي ${hours}:${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs} على كود الغد`;
+            }, 1000);
+        }
+
+        function copyDailyCode() {
+            const code = document.getElementById('dispDailyCode').textContent;
+            navigator.clipboard.writeText(code);
+            alert("تم نسخ كود اليوم بنجاح!");
         }
 
         function formatTime(timestamp) {
@@ -358,9 +449,7 @@
         function containsPhoneNumber(text) {
             if (currentUser && currentUser.isLeader) return false;
             const cleanText = text.replace(/[\s\-\.\_\,\/\\()\+]/g, '');
-            const egPhoneRegex = /(010|011|012|015)[0-9]{8}/;
-            const generalPhoneRegex = /[0-9]{10,11}/;
-            return egPhoneRegex.test(cleanText) || generalPhoneRegex.test(cleanText);
+            return /(010|011|012|015)[0-9]{8}/.test(cleanText) || /[0-9]{10,11}/.test(cleanText);
         }
 
         function showScreen(screenId) {
@@ -368,8 +457,9 @@
             document.getElementById(screenId).classList.add('active');
         }
 
-        // --- AUTO SESSION RESTORE (NO FORCE LOGOUT) ---
+        // --- SESSION RESTORE ---
         window.addEventListener('DOMContentLoaded', () => {
+            startCodeCountdown();
             const savedUser = localStorage.getItem('taqfeela_user');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
@@ -381,7 +471,6 @@
             }
         });
 
-        // --- SECRET ADMIN CLICK TRIGGER & PASSWORD ---
         async function handleSecretAdminClick() {
             adminClickCount++;
             clearTimeout(adminClickTimer);
@@ -389,8 +478,6 @@
 
             if (adminClickCount >= 5) {
                 adminClickCount = 0;
-                
-                // Get current password from Firestore
                 const passDoc = await db.collection('settings').doc('admin_config').get();
                 const currentPass = (passDoc.exists && passDoc.data().pass) ? passDoc.data().pass : "123456";
 
@@ -405,14 +492,11 @@
             }
         }
 
-        async function changeAdminPassword() {
-            const newPass = prompt("🔑 أدخل كلمة السر الجديدة للوحة الأدمن:");
-            if (newPass && newPass.trim().length >= 4) {
-                await db.collection('settings').doc('admin_config').set({ pass: newPass.trim() });
-                alert("تم تغيير كلمة السر بنجاح!");
-            } else if(newPass) {
-                alert("يجب أن تكون كلمة السر 4 رموز على الأقل!");
-            }
+        async function logAdminAction(actionText) {
+            await db.collection('audit_logs').add({
+                action: actionText,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
         }
 
         function loginMarketer(e) {
@@ -422,18 +506,16 @@
 
             db.collection('marketers').get().then((snapshot) => {
                 let userFound = null;
-
                 snapshot.forEach(docSnap => {
                     const data = docSnap.data();
                     const dailyCode = generateDailyCode(data.code).toUpperCase();
-
-                    // Allow login using current Daily Code OR Base Code
                     if (data.name === name && (inputCode === dailyCode || inputCode === data.code.toUpperCase())) {
                         userFound = { id: docSnap.id, ...data };
                     }
                 });
 
                 if (!userFound) return alert('الاسم أو كود اليوم غير صحيح!');
+                if (userFound.isBlocked) return alert('⚠️ تم تجميد حسابك مؤقتاً بواسطة الإدارة. تواصل مع الدعم.');
 
                 currentUser = userFound;
                 localStorage.setItem('taqfeela_user', JSON.stringify(currentUser));
@@ -441,22 +523,13 @@
             });
         }
 
-        function logout() { 
-            currentUser = null; 
-            localStorage.removeItem('taqfeela_user'); 
-            showScreen('authScreen'); 
-        }
+        function logout() { currentUser = null; localStorage.removeItem('taqfeela_user'); showScreen('authScreen'); }
 
         function initMarketerView() {
             showScreen('marketerScreen');
             document.getElementById('dispName').textContent = currentUser.nickname ? `${currentUser.name} (${currentUser.nickname})` : currentUser.name;
             document.getElementById('dispBadge').textContent = currentUser.isLeader ? 'ليدر الفريق' : 'مسوق';
-            
-            // Show current 24h daily code
-            const dailyCode = generateDailyCode(currentUser.code);
-            document.getElementById('dispDailyCode').textContent = dailyCode;
-
-            if (currentUser.nickname) document.getElementById('mNickInput').value = currentUser.nickname;
+            document.getElementById('dispDailyCode').textContent = generateDailyCode(currentUser.code);
 
             db.collection('marketers').doc(currentUser.id).onSnapshot((docSnap) => {
                 if (docSnap.exists) document.getElementById('dispBalance').textContent = `${docSnap.data().balance || 0} ج.م`;
@@ -466,13 +539,338 @@
             loadPublicChat();
         }
 
-        function updateNickname() {
-            const nick = document.getElementById('mNickInput').value.trim();
-            db.collection('marketers').doc(currentUser.id).update({ nickname: nick }).then(() => {
-                currentUser.nickname = nick;
-                localStorage.setItem('taqfeela_user', JSON.stringify(currentUser));
-                document.getElementById('dispName').textContent = nick ? `${currentUser.name} (${nick})` : currentUser.name;
-                alert("تم حفظ الكنية بنجاح!");
+        function switchView(tab) {
+            document.querySelectorAll('.chat-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            ['publicChatView','privateChatView','leaderboardView','mediaView','supportView'].forEach(id => document.getElementById(id).style.display = 'none');
+
+            if (tab === 'public') {
+                document.getElementById('tabPublic').classList.add('active');
+                document.getElementById('publicChatView').style.display = 'flex';
+            } else if (tab === 'private') {
+                document.getElementById('tabPrivate').classList.add('active');
+                document.getElementById('privateChatView').style.display = 'flex';
+            } else if (tab === 'leaderboard') {
+                document.getElementById('tabLeaderboard').classList.add('active');
+                document.getElementById('leaderboardView').style.display = 'block';
+                loadLeaderboard();
+            } else if (tab === 'media') {
+                document.getElementById('tabMedia').classList.add('active');
+                document.getElementById('mediaView').style.display = 'block';
+                loadMediaAssets();
+            } else if (tab === 'support') {
+                document.getElementById('tabSupport').classList.add('active');
+                document.getElementById('supportView').style.display = 'block';
+                loadUserTickets();
+            }
+        }
+
+        // --- PUBLIC CHAT & MEDIA PARSER ---
+        function parseMediaAndText(text) {
+            let html = text;
+            let mediaEmbed = '';
+
+            if (text.startsWith('data:image')) {
+                return { textHtml: '', mediaEmbed: `<img src="${text}" class="msg-img">` };
+            }
+            if (text.startsWith('data:audio')) {
+                return { textHtml: '', mediaEmbed: `<audio controls src="${text}" class="msg-audio"></audio>` };
+            }
+
+            const youtubeRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+))/g;
+            if (youtubeRegex.test(text)) {
+                const match = text.match(youtubeRegex)[0];
+                let ytId = match.includes('v=') ? match.split('v=')[1].split('&')[0] : match.split('/').pop();
+                mediaEmbed = `<iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:200px; border:none; margin-top:6px; border-radius:8px;"></iframe>`;
+            }
+
+            return { textHtml: html, mediaEmbed };
+        }
+
+        function loadPublicChat() {
+            db.collection('chat').orderBy('timestamp', 'asc').limit(50).onSnapshot((snapshot) => {
+                const chatContainer = document.getElementById('chatMsgs');
+                chatContainer.innerHTML = '';
+                snapshot.forEach(msgDoc => {
+                    const data = msgDoc.data();
+                    const isMe = currentUser && currentUser.id === data.senderId;
+                    const rawText = decData(data.textEncrypted || '');
+                    const { textHtml, mediaEmbed } = parseMediaAndText(rawText);
+
+                    const div = document.createElement('div');
+                    div.className = `msg ${isMe ? 'me' : ''}`;
+                    div.innerHTML = `
+                        <div class="msg-header">
+                            <span class="msg-sender" onclick="startPrivateChat('${data.senderId}', '${data.senderName}')">${data.senderNickname ? `${data.senderName} (${data.senderNickname})` : data.senderName} 💬</span>
+                            <span class="msg-time">${formatTime(data.timestamp)}</span>
+                        </div>
+                        <div>${textHtml}</div>${mediaEmbed}
+                    `;
+                    chatContainer.appendChild(div);
+                });
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
+        }
+
+        async function sendPublicChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('msgText');
+            const text = input.value.trim();
+            if (!text) return;
+            if (containsPhoneNumber(text)) return alert("⚠️ يمنع إرسال أرقام الهواتف!");
+
+            await db.collection('chat').add({
+                senderId: currentUser.id,
+                senderName: currentUser.name,
+                senderNickname: currentUser.nickname || '',
+                textEncrypted: encData(text),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            input.value = '';
+        }
+
+        // --- IMAGE & VOICE RECORDING ---
+        function handleImageUpload(e, target) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (evt) => {
+                const base64Img = evt.target.result;
+                if (target === 'public') {
+                    await db.collection('chat').add({
+                        senderId: currentUser.id, senderName: currentUser.name,
+                        textEncrypted: encData(base64Img), timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function toggleAudioRecording(target) {
+            const btn = document.getElementById('recordBtn');
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+                navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.onstop = async () => {
+                        const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader();
+                        reader.onloadend = async () => {
+                            await db.collection('chat').add({
+                                senderId: currentUser.id, senderName: currentUser.name,
+                                textEncrypted: encData(reader.result), timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        };
+                        reader.readAsDataURL(blob);
+                    };
+                    mediaRecorder.start();
+                    btn.textContent = '⏹️🔴';
+                });
+            } else {
+                mediaRecorder.stop();
+                btn.textContent = '🎙️';
+            }
+        }
+
+        // --- LEADERBOARD & MEDIA STORAGE ---
+        function loadLeaderboard() {
+            db.collection('marketers').orderBy('balance', 'desc').limit(10).get().then(snapshot => {
+                const list = document.getElementById('leaderboardList');
+                list.innerHTML = '';
+                let rank = 1;
+                snapshot.forEach(docSnap => {
+                    const m = docSnap.data();
+                    const div = document.createElement('div');
+                    div.className = 'asset-card';
+                    div.innerHTML = `
+                        <div><b>#${rank} ${m.name}</b> ${rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</div>
+                        <div style="color:var(--accent); font-weight:bold;">${m.balance || 0} ج.م</div>
+                    `;
+                    list.appendChild(div);
+                    rank++;
+                });
+            });
+        }
+
+        function loadMediaAssets() {
+            db.collection('media_assets').onSnapshot(snapshot => {
+                const list = document.getElementById('mediaList');
+                list.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const a = docSnap.data();
+                    const div = document.createElement('div');
+                    div.className = 'asset-card';
+                    div.innerHTML = `
+                        <div><b>${a.title}</b></div>
+                        <a href="${a.url}" target="_blank" class="btn-sm" style="text-decoration:none;">📥 تحميل / عرض</a>
+                    `;
+                    list.appendChild(div);
+                });
+            });
+        }
+
+        // --- SUPPORT TICKETS ---
+        function openNewTicketModal() { document.getElementById('ticketModal').classList.add('active'); }
+
+        async function submitNewTicket(e) {
+            e.preventDefault();
+            await db.collection('tickets').add({
+                marketerId: currentUser.id,
+                marketerName: currentUser.name,
+                subject: document.getElementById('tSubject').value,
+                body: document.getElementById('tBody').value,
+                status: 'مفتوحة',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("تم إرسال التذكرة بنجاح!");
+            closeModal('ticketModal');
+        }
+
+        function loadUserTickets() {
+            db.collection('tickets').where('marketerId', '==', currentUser.id).onSnapshot(snapshot => {
+                const list = document.getElementById('ticketsList');
+                list.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const t = docSnap.data();
+                    const div = document.createElement('div');
+                    div.className = 'ticket-box';
+                    div.innerHTML = `
+                        <div class="flex-between">
+                            <b>${t.subject}</b>
+                            <span class="badge-status" style="background:${t.status === 'مغلقة' ? 'var(--danger)' : 'var(--gold)'}; color:#000;">${t.status}</span>
+                        </div>
+                        <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">${t.body}</div>
+                        ${t.reply ? `<div style="background:var(--bg-body); padding:8px; border-radius:6px; margin-top:8px; font-size:12px;"><b>رد الإدارة:</b> ${t.reply}</div>` : ''}
+                    `;
+                    list.appendChild(div);
+                });
+            });
+        }
+
+        // --- ADMIN CONTROLS ---
+        function loadAdminDashboard() {
+            showScreen('adminScreen');
+            switchAdminTab('marketers');
+        }
+
+        function switchAdminTab(sec) {
+            document.querySelectorAll('.admin-layout .tab-btn').forEach(b => b.classList.remove('active'));
+            ['admMarketersSec','admWithdrawsSec','admMediaSec','admTicketsSec','admLogsSec'].forEach(id => document.getElementById(id).style.display = 'none');
+
+            if(sec === 'marketers') {
+                document.getElementById('admTabMarketers').classList.add('active');
+                document.getElementById('admMarketersSec').style.display = 'block';
+                loadAdminMarketers();
+            } else if(sec === 'withdraws') {
+                document.getElementById('admTabWithdraws').classList.add('active');
+                document.getElementById('admWithdrawsSec').style.display = 'block';
+                loadAdminWithdrawals();
+            } else if(sec === 'media') {
+                document.getElementById('admTabMedia').classList.add('active');
+                document.getElementById('admMediaSec').style.display = 'block';
+            } else if(sec === 'tickets') {
+                document.getElementById('admTabTickets').classList.add('active');
+                document.getElementById('admTicketsSec').style.display = 'block';
+                loadAdminTickets();
+            } else if(sec === 'logs') {
+                document.getElementById('admTabLogs').classList.add('active');
+                document.getElementById('admLogsSec').style.display = 'block';
+                loadAdminLogs();
+            }
+        }
+
+        function loadAdminMarketers() {
+            db.collection('marketers').onSnapshot(snapshot => {
+                const tbody = document.getElementById('adminMarketersTable');
+                tbody.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const m = docSnap.data();
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${m.name}</td>
+                        <td><code>${m.code}</code></td>
+                        <td><b style="color:var(--primary);">${generateDailyCode(m.code)}</b></td>
+                        <td><b>${m.balance || 0} ج.م</b></td>
+                        <td><span style="color:${m.isBlocked ? 'var(--danger)' : 'var(--accent)'}">${m.isBlocked ? 'حساب مجمد' : 'نشط'}</span></td>
+                        <td>
+                            <button class="btn-sm" onclick="editBalance('${docSnap.id}', ${m.balance || 0})">✏️ رصيد</button>
+                            <button class="btn-sm" onclick="toggleBlock('${docSnap.id}', ${m.isBlocked || false})">${m.isBlocked ? '🔓 فك الحظر' : '🚫 حظر'}</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        async function toggleBlock(id, isBlocked) {
+            await db.collection('marketers').doc(id).update({ isBlocked: !isBlocked });
+            logAdminAction(`تغيير حالة حظر المسوق (${id}) إلى ${!isBlocked ? 'مجمد' : 'نشط'}`);
+        }
+
+        async function editBalance(id, currentBalance) {
+            const newBal = prompt("أدخل الرصيد الجديد للمسوق:", currentBalance);
+            if (newBal !== null) {
+                await db.collection('marketers').doc(id).update({ balance: parseFloat(newBal) });
+                logAdminAction(`تعديل رصيد المسوق (${id}) إلى ${newBal} ج.م`);
+            }
+        }
+
+        async function addNewMarketer(e) {
+            e.preventDefault();
+            const name = document.getElementById('newMName').value.trim();
+            const code = document.getElementById('newMCode').value.trim().toUpperCase();
+            await db.collection('marketers').add({ name, code, balance: 0, isLeader: false, isBlocked: false });
+            logAdminAction(`إضافة مسوق جديد: ${name} (${code})`);
+            alert("تم إضافة المسوق بنجاح!");
+        }
+
+        async function addMediaAsset(e) {
+            e.preventDefault();
+            await db.collection('media_assets').add({
+                title: document.getElementById('assetTitle').value,
+                url: document.getElementById('assetUrl').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("تم إضافة المادة للتنزلات!");
+        }
+
+        function loadAdminTickets() {
+            db.collection('tickets').onSnapshot(snapshot => {
+                const list = document.getElementById('adminTicketsList');
+                list.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const t = docSnap.data();
+                    const div = document.createElement('div');
+                    div.className = 'ticket-box';
+                    div.innerHTML = `
+                        <div class="flex-between">
+                            <b>${t.marketerName}: ${t.subject}</b>
+                            <button class="btn-sm" onclick="replyTicket('${docSnap.id}')">💬 الرد والإغلاق</button>
+                        </div>
+                        <div style="font-size:12px; margin-top:6px;">${t.body}</div>
+                    `;
+                    list.appendChild(div);
+                });
+            });
+        }
+
+        async function replyTicket(id) {
+            const reply = prompt("أدخل رد الإدارة على التذكرة:");
+            if (reply) {
+                await db.collection('tickets').doc(id).update({ reply, status: 'مغلقة' });
+            }
+        }
+
+        function loadAdminLogs() {
+            db.collection('audit_logs').orderBy('timestamp', 'desc').limit(30).onSnapshot(snapshot => {
+                const tbody = document.getElementById('adminLogsTable');
+                tbody.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const l = docSnap.data();
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${formatTime(l.timestamp)}</td><td>${l.action}</td>`;
+                    tbody.appendChild(tr);
+                });
             });
         }
 
@@ -483,289 +881,13 @@
                 if (docSnap.exists && docSnap.data().text) {
                     document.getElementById('pinnedText').textContent = docSnap.data().text;
                     banner.classList.add('active');
-                    document.getElementById('unpinBtn').style.display = (currentUser && currentUser.isLeader) ? 'inline' : 'none';
-                } else {
-                    banner.classList.remove('active');
-                }
+                    triggerNotification("📌 رسالة مثبتة جديدة", docSnap.data().text);
+                } else banner.classList.remove('active');
             });
         }
 
-        async function pinMessage(text) {
-            if (!currentUser.isLeader) return alert("ميزة التثبيت مخصصة لليدر فقط");
-            await db.collection('settings').doc('pinned').set({ text: text });
-            alert("تم تثبيت الرسالة بنجاح!");
-        }
-
-        async function unpinMessage() {
-            await db.collection('settings').doc('pinned').delete();
-        }
-
-        function parseMediaAndText(text) {
-            const screenAppRegex = /(https?:\/\/screenapp\.io\/app\/v\/[a-zA-Z0-9]+)/g;
-            const youtubeRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+))/g;
-
-            let html = text;
-            let videoEmbed = '';
-
-            if (screenAppRegex.test(text)) {
-                const match = text.match(screenAppRegex)[0];
-                const videoId = match.split('/v/')[1];
-                videoEmbed = `<div class="video-container"><iframe src="https://screenapp.io/app/v/${videoId}" allowfullscreen></iframe></div>`;
-            } else if (youtubeRegex.test(text)) {
-                const match = text.match(youtubeRegex)[0];
-                let ytId = match.includes('v=') ? match.split('v=')[1].split('&')[0] : match.split('/').pop();
-                videoEmbed = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>`;
-            }
-
-            return { textHtml: html, videoEmbed };
-        }
-
-        // --- PUBLIC CHAT ---
-        function loadPublicChat() {
-            db.collection('chat').orderBy('timestamp', 'asc').limit(50).onSnapshot((snapshot) => {
-                const chatContainer = document.getElementById('chatMsgs');
-                chatContainer.innerHTML = '';
-                
-                snapshot.forEach(msgDoc => {
-                    const msgId = msgDoc.id;
-                    const data = msgDoc.data();
-                    const isMe = currentUser && currentUser.id === data.senderId;
-                    const rawText = decData(data.textEncrypted || '');
-                    const { textHtml, videoEmbed } = parseMediaAndText(rawText);
-                    const timeStr = formatTime(data.timestamp);
-
-                    const displayName = data.senderNickname ? `${data.senderName} (${data.senderNickname})` : data.senderName;
-
-                    const msgDiv = document.createElement('div');
-                    msgDiv.className = `msg ${isMe ? 'me' : ''}`;
-                    
-                    msgDiv.innerHTML = `
-                        <div class="msg-header">
-                            <div>
-                                <span class="msg-sender" onclick="startPrivateChat('${data.senderId}', '${displayName}')">${displayName} 💬</span>
-                                <span class="msg-time">${timeStr}</span>
-                            </div>
-                            <span class="msg-menu-btn" onclick="toggleMsgMenu(event, '${msgId}')">⋮</span>
-                        </div>
-                        <div>${textHtml}</div>
-                        ${videoEmbed}
-
-                        <div id="menu-${msgId}" class="msg-dropdown">
-                            <div class="dropdown-item" onclick="openMsgInfo('${msgId}')">ℹ️ معلومات الرسالة</div>
-                            ${currentUser.isLeader ? `<div class="dropdown-item" onclick="pinMessage('${rawText}')">📌 تثبيت الرسالة</div>` : ''}
-                        </div>
-                    `;
-                    chatContainer.appendChild(msgDiv);
-                });
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            });
-        }
-
-        function toggleMsgMenu(e, msgId) {
-            e.stopPropagation();
-            document.querySelectorAll('.msg-dropdown').forEach(d => d.classList.remove('show'));
-            const menu = document.getElementById(`menu-${msgId}`);
-            if (menu) menu.classList.toggle('show');
-        }
-
-        function startPrivateChat(userId, userName) {
-            if (userId === currentUser.id) return;
-            activeDmTarget = { id: userId, name: userName };
-            document.getElementById('dmTargetLabel').textContent = `(${userName})`;
-            switchChatTab('private');
-            loadPrivateMessages();
-        }
-
-        function switchChatTab(type) {
-            document.getElementById('tabPublic').classList.toggle('active', type === 'public');
-            document.getElementById('tabPrivate').classList.toggle('active', type === 'private');
-            document.getElementById('publicChatView').style.display = type === 'public' ? 'flex' : 'none';
-            document.getElementById('privateChatView').style.display = type === 'private' ? 'flex' : 'none';
-        }
-
-        function loadPrivateMessages() {
-            if (!activeDmTarget) return;
-            const chatKey = [currentUser.id, activeDmTarget.id].sort().join('_');
-
-            db.collection('private_chats').doc(chatKey).collection('messages')
-                .orderBy('timestamp', 'asc').onSnapshot((snapshot) => {
-                    const dmContainer = document.getElementById('dmMsgs');
-                    dmContainer.innerHTML = '';
-                    snapshot.forEach(msgDoc => {
-                        const data = msgDoc.data();
-                        const isMe = currentUser.id === data.senderId;
-                        const rawText = decData(data.textEncrypted);
-                        const { textHtml, videoEmbed } = parseMediaAndText(rawText);
-
-                        const div = document.createElement('div');
-                        div.className = `msg ${isMe ? 'me' : ''}`;
-                        div.innerHTML = `<div>${textHtml}</div>${videoEmbed}`;
-                        dmContainer.appendChild(div);
-                    });
-                    dmContainer.scrollTop = dmContainer.scrollHeight;
-                });
-        }
-
-        async function sendPrivateChat(e) {
-            e.preventDefault();
-            const input = document.getElementById('dmMsgText');
-            const text = input.value.trim();
-            if (!text || !activeDmTarget) return;
-
-            if (containsPhoneNumber(text)) {
-                return alert("⚠️ يمنع إرسال أرقام الهواتف حفاظاً على خصوصية الشبكة.");
-            }
-
-            const chatKey = [currentUser.id, activeDmTarget.id].sort().join('_');
-            await db.collection('private_chats').doc(chatKey).collection('messages').add({
-                senderId: currentUser.id,
-                textEncrypted: encData(text),
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            input.value = '';
-        }
-
-        async function sendPublicChat(e) {
-            e.preventDefault();
-            const textInput = document.getElementById('msgText');
-            const text = textInput.value.trim();
-            if (!text) return;
-
-            if (containsPhoneNumber(text)) {
-                return alert("⚠️ يمنع إرسال أرقام الهواتف في الشات العام.");
-            }
-
-            await db.collection('chat').add({
-                senderId: currentUser.id,
-                senderName: currentUser.name,
-                senderNickname: currentUser.nickname || '',
-                textEncrypted: encData(text),
-                seenBy: [currentUser.name],
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            textInput.value = '';
-        }
-
-        // --- WITHDRAWAL SYSTEM ---
-        function openWithdrawModal() {
-            document.getElementById('withdrawModal').classList.add('active');
-        }
-
-        async function submitWithdraw(e) {
-            e.preventDefault();
-            const method = document.getElementById('wMethod').value;
-            const details = document.getElementById('wDetails').value.trim();
-            const amount = parseFloat(document.getElementById('wAmount').value);
-
-            await db.collection('withdrawals').add({
-                marketerId: currentUser.id,
-                marketerName: currentUser.name,
-                method, details, amount,
-                status: 'قيد الانتظار',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            alert("تم إرسال طلب السحب بنجاح إلى الإدارة!");
-            closeModal('withdrawModal');
-        }
-
-        // --- ADMIN PANEL FUNCTIONS ---
-        function loadAdminDashboard() {
-            showScreen('adminScreen');
-
-            // Load Marketers Table
-            db.collection('marketers').onSnapshot(snapshot => {
-                const tbody = document.getElementById('adminMarketersTable');
-                tbody.innerHTML = '';
-                snapshot.forEach(docSnap => {
-                    const m = docSnap.data();
-                    const dailyCode = generateDailyCode(m.code);
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${m.name} ${m.nickname ? `(${m.nickname})` : ''}</td>
-                        <td><code>${m.code}</code></td>
-                        <td><b style="color:var(--primary);">${dailyCode}</b></td>
-                        <td><b>${m.balance || 0} ج.م</b></td>
-                        <td>
-                            <button class="btn-sm" onclick="editBalance('${docSnap.id}', ${m.balance || 0})">✏️ تعديل الرصيد</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            });
-
-            // Load Withdrawals Table
-            db.collection('withdrawals').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
-                const tbody = document.getElementById('adminWithdrawalsTable');
-                tbody.innerHTML = '';
-                snapshot.forEach(docSnap => {
-                    const w = docSnap.data();
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${w.marketerName}</td>
-                        <td><b>${w.amount} ج.م</b></td>
-                        <td>${w.method} (${w.details})</td>
-                        <td><span style="color:${w.status === 'تم التحويل' ? 'var(--accent)' : 'var(--gold)'}">${w.status}</span></td>
-                        <td>
-                            ${w.status !== 'تم التحويل' ? `<button class="btn-sm" onclick="approveWithdrawal('${docSnap.id}', '${w.marketerId}', ${w.amount})">✅ تأكيد التحويل</button>` : 'مكتمل'}
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            });
-        }
-
-        async function addNewMarketer(e) {
-            e.preventDefault();
-            const name = document.getElementById('newMName').value.trim();
-            const code = document.getElementById('newMCode').value.trim().toUpperCase();
-
-            await db.collection('marketers').add({
-                name, code, balance: 0, isLeader: false
-            });
-            alert("تم إضافة المسوق بنجاح!");
-            document.getElementById('newMName').value = '';
-            document.getElementById('newMCode').value = '';
-        }
-
-        async function editBalance(id, currentBalance) {
-            const newBal = prompt("أدخل الرصيد الجديد للمسوق:", currentBalance);
-            if (newBal !== null) {
-                await db.collection('marketers').doc(id).update({ balance: parseFloat(newBal) });
-            }
-        }
-
-        async function approveWithdrawal(wId, mId, amount) {
-            if (confirm("هل تم تحويل المبلغ بالفعل للمسوق؟")) {
-                await db.collection('withdrawals').doc(wId).update({ status: 'تم التحويل' });
-                const mDoc = await db.collection('marketers').doc(mId).get();
-                if (mDoc.exists) {
-                    const currentBal = mDoc.data().balance || 0;
-                    await db.collection('marketers').doc(mId).update({ balance: Math.max(0, currentBal - amount) });
-                }
-                alert("تم تحديث حالة الطلب وخصم المبلغ من رصيد المسوق.");
-            }
-        }
-
-        function openMsgInfo(msgId) {
-            db.collection('chat').doc(msgId).get().then(docSnap => {
-                if (!docSnap.exists) return;
-                const seenList = docSnap.data().seenBy || [];
-                const container = document.getElementById('seenList');
-                container.innerHTML = '';
-                seenList.forEach(name => {
-                    const div = document.createElement('div');
-                    div.className = 'seen-item';
-                    div.innerHTML = `<span>👤 ${name}</span><span style="color:var(--accent);">تم الاطلاع</span>`;
-                    container.appendChild(div);
-                });
-                document.getElementById('infoModal').classList.add('active');
-            });
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
+        function openWithdrawModal() { document.getElementById('withdrawModal').classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     </script>
 </body>
 </html>
