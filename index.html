@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Firebase CDNs (Non-Module for File System Compatibility) -->
+    <!-- Firebase CDNs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -32,9 +32,7 @@
         .form-control{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text-main);font-size:14px;outline:none}
         .form-control:focus{border-color:var(--border-focus)}
         .btn{width:100%;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer}
-        .btn-admin{background:transparent;border:1px solid var(--border);color:var(--text-muted);margin-top:10px}
-        .btn-admin:hover{border-color:var(--gold);color:var(--gold)}
-        .version-tag{text-align:center;margin-top:16px;font-size:11px;color:var(--text-dark)}
+        .version-tag{text-align:center;margin-top:20px;font-size:11px;color:var(--text-dark);cursor:pointer;user-select:none}
         .app-layout{max-width:1000px;width:100%;margin:0 auto;display:grid;grid-template-columns:280px 1fr;gap:20px}
         @media(max-width:850px){.app-layout{grid-template-columns:1fr}}
         .sidebar-card,.main-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
@@ -86,12 +84,11 @@
                     <label>الكود التعريفي</label>
                     <input type="text" id="mCode" class="form-control" placeholder="M-8401" style="text-transform:uppercase" required>
                 </div>
-                <button type="submit" class="btn">دخول المسوقين</button>
+                <button type="submit" class="btn">دخول اللوحة</button>
             </form>
             
-            <button type="button" class="btn btn-admin" onclick="openAdminPrompt()">لوحة التحكم (للإدارة فقط)</button>
-            
-            <div class="version-tag">إصدار النظام v1.0.0</div>
+            <!-- Hidden Trigger Version Tag -->
+            <div class="version-tag" onclick="handleSecretAdminClick()">إصدار النظام v1.0.0</div>
         </div>
     </div>
 
@@ -195,9 +192,28 @@
         const db = firebase.firestore();
 
         const ADMIN_PASS = "01224815487";
+        let clickCount = 0;
+        let clickTimer = null;
         let deferredPrompt = null;
         let currentUser = null;
         let activeReplyTarget = null;
+
+        // Hidden Click Mechanism for Admin Login
+        function handleSecretAdminClick() {
+            clickCount++;
+            clearTimeout(clickTimer);
+            if (clickCount >= 5) {
+                clickCount = 0;
+                const pass = prompt("أدخل كلمة المرور الخاصة بلوحة التحكم:");
+                if (pass === ADMIN_PASS) {
+                    initAdminView();
+                } else if (pass !== null) {
+                    alert("كلمة المرور غير صحيحة!");
+                }
+            } else {
+                clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
+            }
+        }
 
         // PWA Setup
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -227,15 +243,6 @@
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
-        }
-
-        function openAdminPrompt() {
-            const pass = prompt("أدخل كلمة المرور الخاصة بلوحة التحكم:");
-            if (pass === ADMIN_PASS) {
-                initAdminView();
-            } else if (pass !== null) {
-                alert("كلمة المرور غير صحيحة!");
-            }
         }
 
         function loginMarketer(e) {
