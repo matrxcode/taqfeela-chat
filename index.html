@@ -87,7 +87,6 @@
                 <button type="submit" class="btn">دخول اللوحة</button>
             </form>
             
-            <!-- Hidden Trigger Version Tag -->
             <div class="version-tag" onclick="handleSecretAdminClick()">إصدار النظام v1.0.0</div>
         </div>
     </div>
@@ -138,7 +137,6 @@
                     <button class="btn-sm" onclick="logout()">تسجيل الخروج</button>
                 </div>
 
-                <!-- ADD MARKETER FORM -->
                 <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px;">
                     <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">إضافة مسوق جديد</div>
                     <form style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px;" onsubmit="addMarketer(event)">
@@ -148,7 +146,6 @@
                     </form>
                 </div>
 
-                <!-- ADD COMMISSION FORM -->
                 <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px;">
                     <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">تسجيل عملية عمولة</div>
                     <form style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px;" onsubmit="addCommission(event)">
@@ -178,6 +175,11 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
+        }
+
         // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyACL2nG7OdUuU4HRippr7P46OJpPpDYf5g",
@@ -198,7 +200,6 @@
         let currentUser = null;
         let activeReplyTarget = null;
 
-        // Hidden Click Mechanism for Admin Login
         function handleSecretAdminClick() {
             clickCount++;
             clearTimeout(clickTimer);
