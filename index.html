@@ -4,96 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تقفيلة | شبكة المسوقين المشفرة</title>
-
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#090a0f">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --bg-body: #090a0f;
-            --bg-card: #12141c;
-            --bg-input: #0a0b10;
-            --border: #1e2230;
-            --border-focus: #3b82f6;
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --accent: #10b981;
-            --gold: #f59e0b;
-            --danger: #ef4444;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --text-dark: #6b7280;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --font-main: 'Readex Pro', sans-serif;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-
-        .install-banner { position: fixed; top: 0; left: 0; right: 0; background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 12px 20px; display: none; justify-content: space-between; align-items: center; z-index: 1000; }
-        .install-banner.show { display: flex; }
-        .install-btn { padding: 6px 16px; font-size: 12px; background: var(--accent); border: none; border-radius: var(--radius-sm); color: #fff; cursor: pointer; font-weight: 600; }
-
-        .screen { display: none; width: 100%; }
-        .screen.active { display: block; }
-
-        .auth-container { max-width: 400px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px 24px; }
-        .brand-header { text-align: center; margin-bottom: 24px; }
-        .brand-logo { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: var(--radius-md); color: var(--primary); font-weight: 700; font-size: 20px; margin-bottom: 12px; }
-        .brand-title { font-size: 20px; font-weight: 600; }
-        .brand-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
-        .form-control { width: 100%; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; color: var(--text-main); font-size: 14px; outline: none; }
-        .form-control:focus { border-color: var(--border-focus); }
-        .btn { width: 100%; padding: 12px; background: var(--primary); color: #ffffff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; }
-
-        .version-tag { text-align: center; margin-top: 20px; font-size: 11px; color: var(--text-dark); cursor: pointer; user-select: none; }
-
-        .app-layout { max-width: 1000px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
-        @media (max-width: 850px) { .app-layout { grid-template-columns: 1fr; } }
-
-        .sidebar-card, .main-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
-        .profile-box { padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-        .profile-name { font-weight: 600; font-size: 16px; }
-        .profile-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: var(--text-muted); margin-top: 4px; border: 1px solid var(--border); }
-        .profile-badge.leader { background: rgba(245, 158, 11, 0.1); color: var(--gold); border-color: rgba(245, 158, 11, 0.3); }
-
-        .balance-box { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; }
-        .balance-label { font-size: 12px; color: var(--text-muted); }
-        .balance-val { font-size: 26px; font-weight: 700; color: var(--accent); margin-top: 4px; }
-
-        /* Advanced Chat UI */
-        .chat-container { display: flex; flex-direction: column; height: 480px; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; }
-        .msg { max-width: 82%; background: var(--bg-input); border: 1px solid var(--border); padding: 10px 12px; border-radius: var(--radius-md); font-size: 13px; position: relative; }
-        .msg.me { align-self: flex-start; background: rgba(37, 99, 235, 0.1); border-color: rgba(37, 99, 235, 0.3); }
-        
-        .reply-quote { background: rgba(255,255,255,0.05); border-right: 3px solid var(--primary); padding: 4px 8px; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; border-radius: 4px; }
-        
-        .msg-actions { display: flex; gap: 8px; font-size: 10px; margin-top: 6px; justify-content: flex-end; }
-        .msg-act-btn { color: var(--text-muted); cursor: pointer; text-decoration: underline; }
-        .msg-act-btn.del { color: var(--danger); }
-
-        .reply-preview-bar { display: none; justify-content: space-between; align-items: center; background: var(--bg-input); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; color: var(--gold); margin-bottom: 6px; border: 1px dashed var(--border); }
-
-        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
-        .data-table th, .data-table td { padding: 12px; text-align: right; border-bottom: 1px solid var(--border); }
-        .data-table th { color: var(--text-muted); font-weight: 500; }
-        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-input); color: var(--text-main); cursor: pointer; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .logout-link { font-size: 12px; color: var(--danger); cursor: pointer; }
+        :root{--bg-body:#090a0f;--bg-card:#12141c;--bg-input:#0a0b10;--border:#1e2230;--border-focus:#3b82f6;--primary:#2563eb;--accent:#10b981;--gold:#f59e0b;--danger:#ef4444;--text-main:#f3f4f6;--text-muted:#9ca3af;--text-dark:#6b7280;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--font-main:'Readex Pro',sans-serif}
+        *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-main);-webkit-tap-highlight-color:transparent}
+        body{background-color:var(--bg-body);color:var(--text-main);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+        .install-banner{position:fixed;top:0;left:0;right:0;background:var(--bg-card);border-bottom:1px solid var(--border);padding:12px 20px;display:none;justify-content:space-between;align-items:center;z-index:1000}
+        .install-banner.show{display:flex}
+        .install-btn{padding:8px 18px;font-size:13px;background:var(--accent);border:none;border-radius:var(--radius-sm);color:#fff;cursor:pointer;font-weight:600}
+        .screen{display:none;width:100%}.screen.active{display:block}
+        .auth-container{max-width:400px;margin:0 auto;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px 24px}
+        .brand-header{text-align:center;margin-bottom:24px}
+        .brand-logo{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.3);border-radius:var(--radius-md);color:var(--primary);font-weight:700;font-size:20px;margin-bottom:12px}
+        .brand-title{font-size:20px;font-weight:600}
+        .brand-sub{font-size:13px;color:var(--text-muted);margin-top:4px}
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;font-size:12px;font-weight:500;color:var(--text-muted);margin-bottom:6px}
+        .form-control{width:100%;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text-main);font-size:14px;outline:none}
+        .form-control:focus{border-color:var(--border-focus)}
+        .btn{width:100%;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer}
+        .version-tag{text-align:center;margin-top:20px;font-size:11px;color:var(--text-dark);cursor:pointer;user-select:none}
+        .app-layout{max-width:1000px;width:100%;margin:0 auto;display:grid;grid-template-columns:280px 1fr;gap:20px}
+        @media(max-width:850px){.app-layout{grid-template-columns:1fr}}
+        .sidebar-card,.main-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
+        .profile-box{padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:16px}
+        .profile-name{font-weight:600;font-size:16px}
+        .profile-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:12px;background:rgba(255,255,255,.05);color:var(--text-muted);margin-top:4px;border:1px solid var(--border)}
+        .profile-badge.leader{background:rgba(245,158,11,.1);color:var(--gold);border-color:rgba(245,158,11,.3)}
+        .balance-box{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px}
+        .balance-label{font-size:12px;color:var(--text-muted)}
+        .balance-val{font-size:26px;font-weight:700;color:var(--accent);margin-top:4px}
+        .chat-container{display:flex;flex-direction:column;height:480px}
+        .chat-messages{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:12px}
+        .msg{max-width:82%;background:var(--bg-input);border:1px solid var(--border);padding:10px 12px;border-radius:var(--radius-md);font-size:13px;position:relative}
+        .msg.me{align-self:flex-start;background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.3)}
+        .reply-quote{background:rgba(255,255,255,.05);border-right:3px solid var(--primary);padding:4px 8px;font-size:11px;color:var(--text-muted);margin-bottom:6px;border-radius:4px}
+        .msg-actions{display:flex;gap:8px;font-size:10px;margin-top:6px;justify-content:flex-end}
+        .msg-act-btn{color:var(--text-muted);cursor:pointer;text-decoration:underline}
+        .msg-act-btn.del{color:var(--danger)}
+        .reply-preview-bar{display:none;justify-content:space-between;align-items:center;background:var(--bg-input);padding:6px 12px;border-radius:var(--radius-sm);font-size:12px;color:var(--gold);margin-bottom:6px;border:1px dashed var(--border)}
+        .data-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
+        .data-table th,.data-table td{padding:12px;text-align:right;border-bottom:1px solid var(--border)}
+        .data-table th{color:var(--text-muted);font-weight:500}
+        .btn-sm{padding:6px 12px;font-size:12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-input);color:var(--text-main);cursor:pointer}
+        .flex-between{display:flex;justify-content:space-between;align-items:center}
+        .logout-link{font-size:12px;color:var(--danger);cursor:pointer}
     </style>
 </head>
 <body>
 
     <div id="installBanner" class="install-banner">
-        <span style="font-size: 13px;">ثبّت التطبيق على جهازك لسهولة الوصول</span>
-        <button class="install-btn" onclick="triggerPWAInstall()">تثبيت الآن</button>
+        <span style="font-size: 13px;">📲 ثبّت تطبيق تقفيلة الآن على جهازك</span>
+        <button class="install-btn" onclick="triggerPWAInstall()">تثبيت التطبيق</button>
     </div>
 
     <!-- AUTH SCREEN -->
@@ -104,7 +70,6 @@
                 <div class="brand-title">منصة تقفيلة للمسوقين</div>
                 <div class="brand-sub">سجّل دخولك لمتابعة العمولات والشات</div>
             </div>
-
             <form onsubmit="loginMarketer(event)">
                 <div class="form-group">
                     <label>الاسم الثنائي</label>
@@ -116,10 +81,7 @@
                 </div>
                 <button type="submit" class="btn">دخول اللوحة</button>
             </form>
-
-            <div class="version-tag" onclick="handleSecretAdminClick()">
-                إصدار النظام v1.0.0
-            </div>
+            <div class="version-tag" onclick="handleSecretAdminClick()">إصدار النظام v1.0.0</div>
         </div>
     </div>
 
@@ -135,24 +97,19 @@
                     <div id="dispBadge" class="profile-badge">مسوق</div>
                     <div style="font-size: 11px; color: var(--text-dark); margin-top: 6px;" id="dispCode">--</div>
                 </div>
-
                 <div class="balance-box">
                     <div class="balance-label">الرصيد الحالي</div>
                     <div class="balance-val" id="dispBalance">0 ج.م</div>
                 </div>
             </div>
-
             <div class="main-card">
                 <div class="brand-title" style="font-size: 16px; margin-bottom: 12px;">مستجيب الشات المشفر</div>
-                
                 <div class="chat-container">
                     <div class="chat-messages" id="chatMsgs"></div>
-                    
                     <div id="replyPreviewBar" class="reply-preview-bar">
                         <span id="replyPreviewText">رد على: ...</span>
                         <span style="cursor:pointer;" onclick="cancelReply()">✕</span>
                     </div>
-
                     <form class="chat-input-row" style="display:flex; gap:8px;" onsubmit="sendChat(event)">
                         <input type="text" id="msgText" class="form-control" placeholder="اكتب رسالتك..." required>
                         <button type="submit" class="btn" style="width: 80px;">إرسال</button>
@@ -173,7 +130,6 @@
                     </div>
                     <button class="btn-sm" onclick="logout()">تسجيل الخروج</button>
                 </div>
-
                 <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px;">
                     <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">إضافة مسوق جديد (توليد كود فريد)</div>
                     <form style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px;" onsubmit="addMarketer(event)">
@@ -182,7 +138,6 @@
                         <button type="submit" class="btn" style="padding: 0 20px;">إنشاء الكود</button>
                     </form>
                 </div>
-
                 <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px;">
                     <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">تسجيل عملية عمولة (200 ج.م)</div>
                     <form style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px;" onsubmit="addCommission(event)">
@@ -192,7 +147,6 @@
                         <button type="submit" class="btn" style="background: var(--accent); padding: 0 20px;">إضافة للرصيد</button>
                     </form>
                 </div>
-
                 <div style="font-size: 14px; font-weight: 600; margin-top: 10px;">قائمة المسوقين المسجلين</div>
                 <table class="data-table">
                     <thead>
@@ -210,267 +164,289 @@
         </div>
     </div>
 
-    <!-- FIREBASE MODULE -->
+    <!-- FIREBASE SERVICES MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, limit, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        const _0x4e21 = [
+            "AIzaSyACL2nG7OdUuU4HRippr7P46OJpPpDYf5g",
+            "squadly-bb782.firebaseapp.com",
+            "squadly-bb782",
+            "squadly-bb782.firebasestorage.app",
+            "605956538187",
+            "1:605956538187:web:bac92b0e4f087be0e232ce"
+        ];
+
         const firebaseConfig = {
-            apiKey: "AIzaSyACL2nG7OdUuU4HRippr7P46OJpPpDYf5g",
-            authDomain: "squadly-bb782.firebaseapp.com",
-            projectId: "squadly-bb782",
-            storageBucket: "squadly-bb782.firebasestorage.app",
-            messagingSenderId: "605956538187",
-            appId: "1:605956538187:web:bac92b0e4f087be0e232ce"
+            apiKey: _0x4e21[0],
+            authDomain: _0x4e21[1],
+            projectId: _0x4e21[2],
+            storageBucket: _0x4e21[3],
+            messagingSenderId: _0x4e21[4],
+            appId: _0x4e21[5]
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
         window.db = db;
         window.fs = { collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, limit, runTransaction };
     </script>
 
+    <!-- OBFUSCATED LOGIC SCRIPT -->
     <script>
-        const ADMIN_SECRET_PASS = "01224815487";
-        let clickCount = 0;
-        let clickTimer = null;
-        let deferredPrompt = null;
-        let currentUser = null;
-        let activeReplyTarget = null;
+        (function(_0x3e1a8a, _0x21d234) {
+            const _0x51c411 = _0x17b3;
+            while (true) {
+                try {
+                    const _0x4c8ef2 = parseInt(_0x51c411(0x192)) / 0x1 + -parseInt(_0x51c411(0x19d)) / 0x2 + parseInt(_0x51c411(0x193)) / 0x3 * (-parseInt(_0x51c411(0x1a8)) / 0x4) + parseInt(_0x51c411(0x1aa)) / 0x5 + parseInt(_0x51c411(0x1a7)) / 0x6 + -parseInt(_0x51c411(0x199)) / 0x7 + parseInt(_0x51c411(0x1ab)) / 0x8;
+                    if (_0x4c8ef2 === _0x21d234) break;
+                    else _0x3e1a8a['push'](_0x3e1a8a['shift']());
+                } catch (_0x55b8e9) {
+                    _0x3e1a8a['push'](_0x3e1a8a['shift']());
+                }
+            }
+        }(_0x111e, 0x3e45f));
 
-        // Encryption Helpers (Base64 + Salt)
-        const encData = (str) => btoa(encodeURIComponent(str));
-        const decData = (str) => { try { return decodeURIComponent(atob(str)); } catch(e) { return str; } };
+        function _0x111e() {
+            const _0x4d618d = ['01224815487','installBanner','show','prompt','outcome','accepted','remove','encData','decData','handleSecretAdminClick','showScreen','screen','active','mName','mCode','marketers','code','id','loginMarketer','authScreen','logout','newMName','generatedCode','dispName','dispCode','dispBadge','dispBalance','marketerScreen','leader','chatMsgs','chat','msgText','replyPreviewText','replyPreviewBar','msg','me','adminScreen','marketersTable','selectMarketer','clientName','commAmount','10398016yEylxR','3653139JInSse','2859424lQAnkI','3328Ssnwms','24JgTqrh','7178120UuFjTh','14643032gIuHJS','3880536LgqLre'];
+            _0x111e = function() { return _0x4d618d; };
+            return _0x111e();
+        }
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBanner').classList.add('show');
+        function _0x17b3(_0x4b7b2a, _0x3e4210) {
+            const _0x111e03 = _0x111e();
+            return _0x17b3 = function(_0x17b36f, _0x4a4f8d) {
+                _0x17b36f = _0x17b36f - 0x187;
+                let _0x2b80a6 = _0x111e03[_0x17b36f];
+                return _0x2b80a6;
+            }, _0x17b3(_0x4b7b2a, _0x3e4210);
+        }
+
+        const _0x2a3e = _0x17b3;
+        const ADMIN_SECRET_PASS = _0x2a3e(0x187);
+        let clickCount = 0, clickTimer = null, deferredPrompt = null, currentUser = null, activeReplyTarget = null;
+
+        window['addEventListener']('beforeinstallprompt', (_0x1a8c9) => {
+            _0x1a8c9['preventDefault']();
+            deferredPrompt = _0x1a8c9;
+            document['getElementById'](_0x2a3e(0x188))['classList']['add'](_0x2a3e(0x189));
         });
 
         function triggerPWAInstall() {
+            const _0x301a = _0x2a3e;
             if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(() => {
-                    document.getElementById('installBanner').classList.remove('show');
+                deferredPrompt[_0x301a(0x18a)]();
+                deferredPrompt['userChoice']['then']((_0x5bfd12) => {
+                    if (_0x5bfd12[_0x301a(0x18b)] === _0x301a(0x18c)) document['getElementById'](_0x301a(0x188))['classList'][_0x301a(0x18d)](_0x301a(0x189));
                     deferredPrompt = null;
                 });
             }
         }
 
+        const encData = (_0x59a11f) => btoa(encodeURIComponent(_0x59a11f));
+        const decData = (_0x489d20) => { try { return decodeURIComponent(atob(_0x489d20)); } catch(_0x3c2a) { return _0x489d20; } };
+
         function handleSecretAdminClick() {
-            clickCount++;
-            clearTimeout(clickTimer);
+            clickCount++; clearTimeout(clickTimer);
             if (clickCount >= 5) {
                 clickCount = 0;
-                const inputPass = prompt("أدخل رمز الوصول الخفي للوحة التحكم:");
-                if (inputPass === ADMIN_SECRET_PASS) {
-                    initAdminView();
-                } else if (inputPass !== null) {
-                    alert("رمز الوصول غير صحيح!");
-                }
-            } else {
-                clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
-            }
+                const _0x2a101f = prompt("أدخل رمز الوصول الخفي للوحة التحكم:");
+                if (_0x2a101f === ADMIN_SECRET_PASS) initAdminView();
+                else if (_0x2a101f !== null) alert("رمز الوصول غير صحيح!");
+            } else { clickTimer = setTimeout(() => { clickCount = 0; }, 2000); }
         }
 
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+        function showScreen(_0x367f08) {
+            const _0x5f99 = _0x2a3e;
+            document['querySelectorAll']('.' + _0x5f99(0x190))['forEach'](_0x4fb813 => _0x4fb813['classList']['remove'](_0x5f99(0x191)));
+            document['getElementById'](_0x367f08)['classList']['add'](_0x5f99(0x191));
         }
 
-        async function loginMarketer(e) {
-            e.preventDefault();
-            const name = document.getElementById('mName').value.trim();
-            const code = document.getElementById('mCode').value.trim().toUpperCase();
+        async function loginMarketer(_0x3f31f9) {
+            const _0x180b = _0x2a3e;
+            _0x3f31f9['preventDefault']();
+            const _0x5e08b1 = document['getElementById'](_0x180b(0x192))['value']['trim']();
+            const _0x51c911 = document['getElementById'](_0x180b(0x193))['value']['trim']()['toUpperCase']();
 
-            const q = window.fs.query(window.fs.collection(window.db, 'marketers'), window.fs.where('code', '==', code));
-            window.fs.onSnapshot(q, (snap) => {
-                if (snap.empty) { alert('الكود غير صحيح'); return; }
-                let userData = null;
-                snap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data.name === name) userData = { id: docSnap.id, ...data };
+            const _0x15bf8d = window['fs']['query'](window['fs']['collection'](window['db'], _0x180b(0x194)), window['fs']['where'](_0x180b(0x195), '==', _0x51c911));
+            window['fs']['onSnapshot'](_0x15bf8d, (_0x386dfd) => {
+                if (_0x386dfd['empty']) { alert('الكود غير صحيح'); return; }
+                let _0x550e18 = null;
+                _0x386dfd['forEach'](_0x5d9333 => {
+                    const _0x103d3c = _0x5d9333['data']();
+                    if (_0x103d3c['name'] === _0x5e08b1) _0x550e18 = { id: _0x5d9333['id'], ..._0x103d3c };
                 });
-
-                if (!userData) { alert('الاسم غير مطابق للكود المسجل'); return; }
-
-                currentUser = userData;
+                if (!_0x550e18) { alert('الاسم غير مطابق للكود المسجل'); return; }
+                currentUser = _0x550e18;
                 initMarketerView();
             });
         }
 
-        function logout() {
-            currentUser = null;
-            showScreen('authScreen');
-        }
+        function logout() { currentUser = null; showScreen('authScreen'); }
 
-        document.getElementById('newMName')?.addEventListener('input', () => {
-            if (!document.getElementById('generatedCode').value) {
-                const rand = Math.floor(1000 + Math.random() * 9000);
-                document.getElementById('generatedCode').value = `M-${rand}`;
+        document['getElementById']('newMName')?.['addEventListener']('input', () => {
+            if (!document['getElementById']('generatedCode')['value']) {
+                const _0x11e403 = Math['floor'](1000 + Math['random']() * 9000);
+                document['getElementById']('generatedCode')['value'] = `M-${_0x11e403}`;
             }
         });
 
         function initMarketerView() {
-            showScreen('marketerScreen');
-            document.getElementById('dispName').textContent = currentUser.name;
-            document.getElementById('dispCode').textContent = currentUser.code;
-            document.getElementById('dispBadge').textContent = currentUser.isLeader ? 'ليدر الفريق' : 'مسوق';
-            if (currentUser.isLeader) document.getElementById('dispBadge').classList.add('leader');
+            const _0x3b5f = _0x2a3e;
+            showScreen(_0x3b5f(0x19b));
+            document['getElementById'](_0x3b5f(0x197))['textContent'] = currentUser['name'];
+            document['getElementById'](_0x3b5f(0x198))['textContent'] = currentUser['code'];
+            document['getElementById'](_0x3b5f(0x199))['textContent'] = currentUser['isLeader'] ? 'ليدر الفريق' : 'مسوق';
+            if (currentUser['isLeader']) document['getElementById'](_0x3b5f(0x199))['classList']['add'](_0x3b5f(0x19c));
 
-            // Live Balance Listener
-            window.fs.onSnapshot(window.fs.doc(window.db, 'marketers', currentUser.id), docSnap => {
-                if (docSnap.exists()) {
-                    document.getElementById('dispBalance').textContent = `${docSnap.data().balance || 0} ج.م`;
-                }
+            window['fs']['onSnapshot'](window['fs']['doc'](window['db'], _0x3b5f(0x194), currentUser['id']), _0x133d34 => {
+                if (_0x133d34['exists']()) document['getElementById'](_0x3b5f(0x19a))['textContent'] = `${_0x133d34['data']()['balance'] || 0} ج.م`;
             });
 
-            // Live Encrypted Chat Listener
-            const qChat = window.fs.query(window.fs.collection(window.db, 'chat'), window.fs.orderBy('timestamp', 'asc'), window.fs.limit(50));
-            window.fs.onSnapshot(qChat, snap => {
-                const chatBox = document.getElementById('chatMsgs');
-                chatBox.innerHTML = '';
-                snap.forEach(docSnap => {
-                    const msg = docSnap.data();
-                    const isMe = currentUser && currentUser.code === msg.senderCode;
-                    const plainText = decData(msg.textEncrypted || '');
+            const _0x341e8c = window['fs']['query'](window['fs']['collection'](window['db'], _0x3b5f(0x19d)), window['fs']['orderBy']('timestamp', 'asc'), window['fs']['limit'](50));
+            window['fs']['onSnapshot'](_0x341e8c, _0x546d1b => {
+                const _0x4c2b99 = document['getElementById'](_0x3b5f(0x19d));
+                _0x4c2b99['innerHTML'] = '';
+                _0x546d1b['forEach'](_0x39a13b => {
+                    const _0x1b2d13 = _0x39a13b['data']();
+                    const _0x170b0c = currentUser && currentUser['code'] === _0x1b2d13['senderCode'];
+                    const _0x4d4c55 = decData(_0x1b2d13['textEncrypted'] || '');
 
-                    const div = document.createElement('div');
-                    div.className = `msg ${isMe ? 'me' : ''}`;
+                    const _0x178be6 = document['createElement']('div');
+                    _0x178be6['className'] = `${_0x3b5f(0x1a2)} ${_0x170b0c ? _0x3b5f(0x1a3) : ''}`;
                     
-                    let replyHTML = msg.replyTo ? `<div class="reply-quote">رد على: ${decData(msg.replyToText)}</div>` : '';
-                    let deleteBtnHTML = isMe ? `<span class="msg-act-btn del" onclick="deleteMyMsg('${docSnap.id}')">حذف</span>` : '';
+                    let _0x34900a = _0x1b2d13['replyTo'] ? `<div class="reply-quote">رد على: ${decData(_0x1b2d13['replyToText'])}</div>` : '';
+                    let _0x3e1d03 = _0x170b0c ? `<span class="msg-act-btn del" onclick="deleteMyMsg('${_0x39a13b['id']}')">حذف</span>` : '';
 
-                    div.innerHTML = `
-                        ${replyHTML}
+                    _0x178be6['innerHTML'] = `
+                        ${_0x34900a}
                         <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">
-                            ${msg.senderName} ${msg.isLeader ? '⚡ [ليدر]' : ''}
+                            ${_0x1b2d13['senderName']} ${_0x1b2d13['isLeader'] ? '⚡ [ليدر]' : ''}
                         </div>
-                        <div>${plainText}</div>
+                        <div>${_0x4d4c55}</div>
                         <div class="msg-actions">
-                            <span class="msg-act-btn" onclick="setReply('${msg.senderName}', '${plainText}')">رد</span>
-                            ${deleteBtnHTML}
+                            <span class="msg-act-btn" onclick="setReply('${_0x1b2d13['senderName']}', '${_0x4d4c55}')">رد</span>
+                            ${_0x3e1d03}
                         </div>
                     `;
-                    chatBox.appendChild(div);
+                    _0x4c2b99['appendChild'](_0x178be6);
                 });
-                chatBox.scrollTop = chatBox.scrollHeight;
+                _0x4c2b99['scrollTop'] = _0x4c2b99['scrollHeight'];
             });
         }
 
-        function setReply(author, text) {
-            activeReplyTarget = { author, text };
-            document.getElementById('replyPreviewText').textContent = `رد على (${author}): ${text.substring(0, 20)}...`;
-            document.getElementById('replyPreviewBar').style.display = 'flex';
+        function setReply(_0x3e29f3, _0x53dfb6) {
+            activeReplyTarget = { author: _0x3e29f3, text: _0x53dfb6 };
+            document['getElementById']('replyPreviewText')['textContent'] = `رد على (${_0x3e29f3}): ${_0x53dfb6['substring'](0, 20)}...`;
+            document['getElementById']('replyPreviewBar')['style']['display'] = 'flex';
         }
 
         function cancelReply() {
             activeReplyTarget = null;
-            document.getElementById('replyPreviewBar').style.display = 'none';
+            document['getElementById']('replyPreviewBar')['style']['display'] = 'none';
         }
 
-        async function sendChat(e) {
-            e.preventDefault();
-            const txt = document.getElementById('msgText').value.trim();
-            if (!txt) return;
+        async function sendChat(_0x2289f8) {
+            _0x2289f8['preventDefault']();
+            const _0x5ed6cf = document['getElementById']('msgText')['value']['trim']();
+            if (!_0x5ed6cf) return;
 
-            const payload = {
-                senderName: currentUser.name,
-                senderCode: currentUser.code,
-                isLeader: currentUser.isLeader || false,
-                textEncrypted: encData(txt),
+            const _0x4ba89a = {
+                senderName: currentUser['name'],
+                senderCode: currentUser['code'],
+                isLeader: currentUser['isLeader'] || false,
+                textEncrypted: encData(_0x5ed6cf),
                 timestamp: new Date()
             };
 
             if (activeReplyTarget) {
-                payload.replyTo = activeReplyTarget.author;
-                payload.replyToText = encData(activeReplyTarget.text);
+                _0x4ba89a['replyTo'] = activeReplyTarget['author'];
+                _0x4ba89a['replyToText'] = encData(activeReplyTarget['text']);
             }
 
-            await window.fs.addDoc(window.fs.collection(window.db, 'chat'), payload);
-            document.getElementById('msgText').value = '';
+            await window['fs']['addDoc'](window['fs']['collection'](window['db'], 'chat'), _0x4ba89a);
+            document['getElementById']('msgText')['value'] = '';
             cancelReply();
         }
 
-        async function deleteMyMsg(msgId) {
+        async function deleteMyMsg(_0x32e29e) {
             if (confirm("هل تريد حذف هذه الرسالة من الشات؟")) {
-                await window.fs.deleteDoc(window.fs.doc(window.db, 'chat', msgId));
+                await window['fs']['deleteDoc'](window['fs']['doc'](window['db'], 'chat', _0x32e29e));
             }
         }
 
         function initAdminView() {
-            showScreen('adminScreen');
+            const _0x1a0d = _0x2a3e;
+            showScreen(_0x1a0d(0x1a4));
+            window['fs']['onSnapshot'](window['fs']['collection'](window['db'], _0x1a0d(0x194)), _0x34563a => {
+                const _0x524672 = document['getElementById'](_0x1a0d(0x1a5));
+                const _0x41f879 = document['getElementById'](_0x1a0d(0x1a6));
+                _0x524672['innerHTML'] = '';
+                _0x41f879['innerHTML'] = '<option value="">اختر المسوق</option>';
 
-            window.fs.onSnapshot(window.fs.collection(window.db, 'marketers'), snap => {
-                const tbody = document.getElementById('marketersTable');
-                const select = document.getElementById('selectMarketer');
-                tbody.innerHTML = '';
-                select.innerHTML = '<option value="">اختر المسوق</option>';
-
-                snap.forEach(docSnap => {
-                    const m = docSnap.data();
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${m.name}</td>
-                        <td><code>${m.code}</code></td>
-                        <td>${m.isLeader ? '<span style="color:var(--gold)">ليدر</span>' : 'مسوق'}</td>
-                        <td style="color:var(--accent); font-weight:600;">${m.balance || 0} ج.م</td>
+                _0x34563a['forEach'](_0x1406e2 => {
+                    const _0x4f1773 = _0x1406e2['data']();
+                    const _0x12bcf8 = document['createElement']('tr');
+                    _0x12bcf8['innerHTML'] = `
+                        <td>${_0x4f1773['name']}</td>
+                        <td><code>${_0x4f1773['code']}</code></td>
+                        <td>${_0x4f1773['isLeader'] ? '<span style="color:var(--gold)">ليدر</span>' : 'مسوق'}</td>
+                        <td style="color:var(--accent); font-weight:600;">${_0x4f1773['balance'] || 0} ج.م</td>
                         <td>
-                            <button class="btn-sm" onclick="toggleLeader('${docSnap.id}', ${!m.isLeader})">
-                                ${m.isLeader ? 'إلغاء الليدر' : 'ترقية لـ ليدر'}
+                            <button class="btn-sm" onclick="toggleLeader('${_0x1406e2['id']}', ${!_0x4f1773['isLeader']})">
+                                ${_0x4f1773['isLeader'] ? 'إلغاء الليدر' : 'ترقية لـ ليدر'}
                             </button>
                         </td>
                     `;
-                    tbody.appendChild(tr);
+                    _0x524672['appendChild'](_0x12bcf8);
 
-                    const opt = document.createElement('option');
-                    opt.value = docSnap.id;
-                    opt.textContent = `${m.name} (${m.code})`;
-                    select.appendChild(opt);
+                    const _0x37a548 = document['createElement']('option');
+                    _0x37a548['value'] = _0x1406e2['id'];
+                    _0x37a548['textContent'] = `${_0x4f1773['name']} (${_0x4f1773['code']})`;
+                    _0x41f879['appendChild'](_0x37a548);
                 });
             });
         }
 
-        async function addMarketer(e) {
-            e.preventDefault();
-            const name = document.getElementById('newMName').value.trim();
-            const code = document.getElementById('generatedCode').value.trim();
+        async function addMarketer(_0x42dfbe) {
+            _0x42dfbe['preventDefault']();
+            const _0x50f9cd = document['getElementById']('newMName')['value']['trim']();
+            const _0x8085d = document['getElementById']('generatedCode')['value']['trim']();
 
-            await window.fs.addDoc(window.fs.collection(window.db, 'marketers'), {
-                name: name,
-                code: code,
+            await window['fs']['addDoc'](window['fs']['collection'](window['db'], 'marketers'), {
+                name: _0x50f9cd,
+                code: _0x8085d,
                 balance: 0,
                 isLeader: false
             });
 
-            document.getElementById('newMName').value = '';
-            document.getElementById('generatedCode').value = '';
-            alert(`تم إنشاء حساب المسوق بنجاح!\nالاسم: ${name}\nالكود المشفر: ${code}`);
+            document['getElementById']('newMName')['value'] = '';
+            document['getElementById']('generatedCode')['value'] = '';
+            alert(`تم إنشاء حساب المسوق بنجاح!\nالاسم: ${_0x50f9cd}\nالكود المشفر: ${_0x8085d}`);
         }
 
-        async function addCommission(e) {
-            e.preventDefault();
-            const mId = document.getElementById('selectMarketer').value;
-            const amount = parseFloat(document.getElementById('commAmount').value);
+        async function addCommission(_0x347c6a) {
+            _0x347c6a['preventDefault']();
+            const _0x433299 = document['getElementById']('selectMarketer')['value'];
+            const _0x133dfd = parseFloat(document['getElementById']('commAmount')['value']);
 
-            if (!mId) return;
+            if (!_0x433299) return;
 
-            const ref = window.fs.doc(window.db, 'marketers', mId);
-            await window.fs.runTransaction(window.db, async (transaction) => {
-                const docSnap = await transaction.get(ref);
-                if (!docSnap.exists()) return;
-                const newBal = (docSnap.data().balance || 0) + amount;
-                transaction.update(ref, { balance: newBal });
+            const _0x5bb0bf = window['fs']['doc'](window['db'], 'marketers', _0x433299);
+            await window['fs']['runTransaction'](window['db'], async (_0x55cae5) => {
+                const _0x48795c = await _0x55cae5['get'](_0x5bb0bf);
+                if (!_0x48795c['exists']()) return;
+                const _0x35606b = (_0x48795c['data']()['balance'] || 0) + _0x133dfd;
+                _0x55cae5['update'](_0x5bb0bf, { balance: _0x35606b });
             });
 
-            document.getElementById('clientName').value = '';
+            document['getElementById']('clientName')['value'] = '';
             alert('تمت إضافة العمولة فوراً لحساب المسوق!');
         }
 
-        async function toggleLeader(id, status) {
-            await window.fs.updateDoc(window.fs.doc(window.db, 'marketers', id), { isLeader: status });
+        async function toggleLeader(_0x2fe02d, _0x3e680a) {
+            await window['fs']['updateDoc'](window['fs']['doc'](window['db'], 'marketers', _0x2fe02d), { isLeader: _0x3e680a });
         }
     </script>
 </body>
