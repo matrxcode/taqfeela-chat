@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقفيلة | شبكة المسوقين المشفرة</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #090a0f;
+            --bg-card: #12141c;
+            --bg-input: #0a0b10;
+            --border: #1e2230;
+            --border-focus: #3b82f6;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --accent: #10b981;
+            --gold: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --text-dark: #6b7280;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --font-main: 'Readex Pro', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+
+        .install-banner { position: fixed; top: 0; left: 0; right: 0; background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 12px 20px; display: none; justify-content: space-between; align-items: center; z-index: 1000; }
+        .install-banner.show { display: flex; }
+        .install-btn { padding: 6px 16px; font-size: 12px; background: var(--accent); border: none; border-radius: var(--radius-sm); color: #fff; cursor: pointer; font-weight: 600; }
+
+        .screen { display: none; width: 100%; }
+        .screen.active { display: block; }
+
+        .auth-container { max-width: 400px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px 24px; }
+        .brand-header { text-align: center; margin-bottom: 24px; }
+        .brand-logo { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: var(--radius-md); color: var(--primary); font-weight: 700; font-size: 20px; margin-bottom: 12px; }
+        .brand-title { font-size: 20px; font-weight: 600; }
+        .brand-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+        .form-control { width: 100%; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; color: var(--text-main); font-size: 14px; outline: none; }
+        .form-control:focus { border-color: var(--border-focus); }
+        .btn { width: 100%; padding: 12px; background: var(--primary); color: #ffffff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; }
+
+        .version-tag { text-align: center; margin-top: 20px; font-size: 11px; color: var(--text-dark); cursor: pointer; user-select: none; }
+
+        .app-layout { max-width: 1000px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+        @media (max-width: 850px) { .app-layout { grid-template-columns: 1fr; } }
+
+        .sidebar-card, .main-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+        .profile-box { padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+        .profile-name { font-weight: 600; font-size: 16px; }
+        .profile-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: var(--text-muted); margin-top: 4px; border: 1px solid var(--border); }
+        .profile-badge.leader { background: rgba(245, 158, 11, 0.1); color: var(--gold); border-color: rgba(245, 158, 11, 0.3); }
+
+        .balance-box { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; }
+        .balance-label { font-size: 12px; color: var(--text-muted); }
+        .balance-val { font-size: 26px; font-weight: 700; color: var(--accent); margin-top: 4px; }
+
+        /* Advanced Chat UI */
+        .chat-container { display: flex; flex-direction: column; height: 480px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 82%; background: var(--bg-input); border: 1px solid var(--border); padding: 10px 12px; border-radius: var(--radius-md); font-size: 13px; position: relative; }
+        .msg.me { align-self: flex-start; background: rgba(37, 99, 235, 0.1); border-color: rgba(37, 99, 235, 0.3); }
+        
+        .reply-quote { background: rgba(255,255,255,0.05); border-right: 3px solid var(--primary); padding: 4px 8px; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; border-radius: 4px; }
+        
+        .msg-actions { display: flex; gap: 8px; font-size: 10px; margin-top: 6px; justify-content: flex-end; }
+        .msg-act-btn { color: var(--text-muted); cursor: pointer; text-decoration: underline; }
+        .msg-act-btn.del { color: var(--danger); }
+
+        .reply-preview-bar { display: none; justify-content: space-between; align-items: center; background: var(--bg-input); padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; color: var(--gold); margin-bottom: 6px; border: 1px dashed var(--border); }
+
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+        .data-table th, .data-table td { padding: 12px; text-align: right; border-bottom: 1px solid var(--border); }
+        .data-table th { color: var(--text-muted); font-weight: 500; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-input); color: var(--text-main); cursor: pointer; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .logout-link { font-size: 12px; color: var(--danger); cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="installBanner" class="install-banner">
+        <span style="font-size: 13px;">ثبّت التطبيق على جهازك لسهولة الوصول</span>
+        <button class="install-btn" onclick="triggerPWAInstall()">تثبيت الآن</button>
+    </div>
+
+    <!-- AUTH SCREEN -->
+    <div id="authScreen" class="screen active">
+        <div class="auth-container">
+            <div class="brand-header">
+                <div class="brand-logo">🔒</div>
+                <div class="brand-title">منصة تقفيلة للمسوقين</div>
+                <div class="brand-sub">سجّل دخولك لمتابعة العمولات والشات</div>
+            </div>
+
+            <form onsubmit="loginMarketer(event)">
+                <div class="form-group">
+                    <label>الاسم الثنائي</label>
+                    <input type="text" id="mName" class="form-control" placeholder="أحمد محمود" required>
+                </div>
+                <div class="form-group">
+                    <label>الكود التعريفي المشفر</label>
+                    <input type="text" id="mCode" class="form-control" placeholder="M-8401" style="text-transform:uppercase" required>
+                </div>
+                <button type="submit" class="btn">دخول اللوحة</button>
+            </form>
+
+            <div class="version-tag" onclick="handleSecretAdminClick()">
+                إصدار النظام v1.0.0
+            </div>
+        </div>
+    </div>
+
+    <!-- MARKETER DASHBOARD -->
+    <div id="marketerScreen" class="screen">
+        <div class="app-layout">
+            <div class="sidebar-card">
+                <div class="profile-box">
+                    <div class="flex-between">
+                        <div class="profile-name" id="dispName">--</div>
+                        <span class="logout-link" onclick="logout()">خروج</span>
+                    </div>
+                    <div id="dispBadge" class="profile-badge">مسوق</div>
+                    <div style="font-size: 11px; color: var(--text-dark); margin-top: 6px;" id="dispCode">--</div>
+                </div>
+
+                <div class="balance-box">
+                    <div class="balance-label">الرصيد الحالي</div>
+                    <div class="balance-val" id="dispBalance">0 ج.م</div>
+                </div>
+            </div>
+
+            <div class="main-card">
+                <div class="brand-title" style="font-size: 16px; margin-bottom: 12px;">مستجيب الشات المشفر</div>
+                
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMsgs"></div>
+                    
+                    <div id="replyPreviewBar" class="reply-preview-bar">
+                        <span id="replyPreviewText">رد على: ...</span>
+                        <span style="cursor:pointer;" onclick="cancelReply()">✕</span>
+                    </div>
+
+                    <form class="chat-input-row" style="display:flex; gap:8px;" onsubmit="sendChat(event)">
+                        <input type="text" id="msgText" class="form-control" placeholder="اكتب رسالتك..." required>
+                        <button type="submit" class="btn" style="width: 80px;">إرسال</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="adminScreen" class="screen">
+        <div class="app-layout" style="grid-template-columns: 1fr;">
+            <div class="main-card">
+                <div class="flex-between" style="margin-bottom: 20px;">
+                    <div>
+                        <div class="brand-title">لوحة إدارة المسوقين والعمولات</div>
+                        <div class="brand-sub">إضافة مسوقين جدد، تحويل الليدرز، وتحديد العمولات</div>
+                    </div>
+                    <button class="btn-sm" onclick="logout()">تسجيل الخروج</button>
+                </div>
+
+                <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px;">
+                    <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">إضافة مسوق جديد (توليد كود فريد)</div>
+                    <form style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px;" onsubmit="addMarketer(event)">
+                        <input type="text" id="newMName" class="form-control" placeholder="الاسم الثنائي" required>
+                        <input type="text" id="generatedCode" class="form-control" placeholder="الكود (تلقائي)" readonly>
+                        <button type="submit" class="btn" style="padding: 0 20px;">إنشاء الكود</button>
+                    </form>
+                </div>
+
+                <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px;">
+                    <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">تسجيل عملية عمولة (200 ج.م)</div>
+                    <form style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px;" onsubmit="addCommission(event)">
+                        <select id="selectMarketer" class="form-control" required><option value="">اختر المسوق</option></select>
+                        <input type="text" id="clientName" class="form-control" placeholder="اسم العميل" required>
+                        <input type="number" id="commAmount" class="form-control" value="200" required>
+                        <button type="submit" class="btn" style="background: var(--accent); padding: 0 20px;">إضافة للرصيد</button>
+                    </form>
+                </div>
+
+                <div style="font-size: 14px; font-weight: 600; margin-top: 10px;">قائمة المسوقين المسجلين</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>الكود المشفر</th>
+                            <th>الرتبة</th>
+                            <th>الرصيد الحالي</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marketersTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE MODULE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, limit, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyACL2nG7OdUuU4HRippr7P46OJpPpDYf5g",
+            authDomain: "squadly-bb782.firebaseapp.com",
+            projectId: "squadly-bb782",
+            storageBucket: "squadly-bb782.firebasestorage.app",
+            messagingSenderId: "605956538187",
+            appId: "1:605956538187:web:bac92b0e4f087be0e232ce"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.fs = { collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, limit, runTransaction };
+    </script>
+
+    <script>
+        const ADMIN_SECRET_PASS = "01224815487";
+        let clickCount = 0;
+        let clickTimer = null;
+        let deferredPrompt = null;
+        let currentUser = null;
+        let activeReplyTarget = null;
+
+        // Encryption Helpers (Base64 + Salt)
+        const encData = (str) => btoa(encodeURIComponent(str));
+        const decData = (str) => { try { return decodeURIComponent(atob(str)); } catch(e) { return str; } };
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').classList.add('show');
+        });
+
+        function triggerPWAInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(() => {
+                    document.getElementById('installBanner').classList.remove('show');
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        function handleSecretAdminClick() {
+            clickCount++;
+            clearTimeout(clickTimer);
+            if (clickCount >= 5) {
+                clickCount = 0;
+                const inputPass = prompt("أدخل رمز الوصول الخفي للوحة التحكم:");
+                if (inputPass === ADMIN_SECRET_PASS) {
+                    initAdminView();
+                } else if (inputPass !== null) {
+                    alert("رمز الوصول غير صحيح!");
+                }
+            } else {
+                clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
+            }
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        async function loginMarketer(e) {
+            e.preventDefault();
+            const name = document.getElementById('mName').value.trim();
+            const code = document.getElementById('mCode').value.trim().toUpperCase();
+
+            const q = window.fs.query(window.fs.collection(window.db, 'marketers'), window.fs.where('code', '==', code));
+            window.fs.onSnapshot(q, (snap) => {
+                if (snap.empty) { alert('الكود غير صحيح'); return; }
+                let userData = null;
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.name === name) userData = { id: docSnap.id, ...data };
+                });
+
+                if (!userData) { alert('الاسم غير مطابق للكود المسجل'); return; }
+
+                currentUser = userData;
+                initMarketerView();
+            });
+        }
+
+        function logout() {
+            currentUser = null;
+            showScreen('authScreen');
+        }
+
+        document.getElementById('newMName')?.addEventListener('input', () => {
+            if (!document.getElementById('generatedCode').value) {
+                const rand = Math.floor(1000 + Math.random() * 9000);
+                document.getElementById('generatedCode').value = `M-${rand}`;
+            }
+        });
+
+        function initMarketerView() {
+            showScreen('marketerScreen');
+            document.getElementById('dispName').textContent = currentUser.name;
+            document.getElementById('dispCode').textContent = currentUser.code;
+            document.getElementById('dispBadge').textContent = currentUser.isLeader ? 'ليدر الفريق' : 'مسوق';
+            if (currentUser.isLeader) document.getElementById('dispBadge').classList.add('leader');
+
+            // Live Balance Listener
+            window.fs.onSnapshot(window.fs.doc(window.db, 'marketers', currentUser.id), docSnap => {
+                if (docSnap.exists()) {
+                    document.getElementById('dispBalance').textContent = `${docSnap.data().balance || 0} ج.م`;
+                }
+            });
+
+            // Live Encrypted Chat Listener
+            const qChat = window.fs.query(window.fs.collection(window.db, 'chat'), window.fs.orderBy('timestamp', 'asc'), window.fs.limit(50));
+            window.fs.onSnapshot(qChat, snap => {
+                const chatBox = document.getElementById('chatMsgs');
+                chatBox.innerHTML = '';
+                snap.forEach(docSnap => {
+                    const msg = docSnap.data();
+                    const isMe = currentUser && currentUser.code === msg.senderCode;
+                    const plainText = decData(msg.textEncrypted || '');
+
+                    const div = document.createElement('div');
+                    div.className = `msg ${isMe ? 'me' : ''}`;
+                    
+                    let replyHTML = msg.replyTo ? `<div class="reply-quote">رد على: ${decData(msg.replyToText)}</div>` : '';
+                    let deleteBtnHTML = isMe ? `<span class="msg-act-btn del" onclick="deleteMyMsg('${docSnap.id}')">حذف</span>` : '';
+
+                    div.innerHTML = `
+                        ${replyHTML}
+                        <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">
+                            ${msg.senderName} ${msg.isLeader ? '⚡ [ليدر]' : ''}
+                        </div>
+                        <div>${plainText}</div>
+                        <div class="msg-actions">
+                            <span class="msg-act-btn" onclick="setReply('${msg.senderName}', '${plainText}')">رد</span>
+                            ${deleteBtnHTML}
+                        </div>
+                    `;
+                    chatBox.appendChild(div);
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
+
+        function setReply(author, text) {
+            activeReplyTarget = { author, text };
+            document.getElementById('replyPreviewText').textContent = `رد على (${author}): ${text.substring(0, 20)}...`;
+            document.getElementById('replyPreviewBar').style.display = 'flex';
+        }
+
+        function cancelReply() {
+            activeReplyTarget = null;
+            document.getElementById('replyPreviewBar').style.display = 'none';
+        }
+
+        async function sendChat(e) {
+            e.preventDefault();
+            const txt = document.getElementById('msgText').value.trim();
+            if (!txt) return;
+
+            const payload = {
+                senderName: currentUser.name,
+                senderCode: currentUser.code,
+                isLeader: currentUser.isLeader || false,
+                textEncrypted: encData(txt),
+                timestamp: new Date()
+            };
+
+            if (activeReplyTarget) {
+                payload.replyTo = activeReplyTarget.author;
+                payload.replyToText = encData(activeReplyTarget.text);
+            }
+
+            await window.fs.addDoc(window.fs.collection(window.db, 'chat'), payload);
+            document.getElementById('msgText').value = '';
+            cancelReply();
+        }
+
+        async function deleteMyMsg(msgId) {
+            if (confirm("هل تريد حذف هذه الرسالة من الشات؟")) {
+                await window.fs.deleteDoc(window.fs.doc(window.db, 'chat', msgId));
+            }
+        }
+
+        function initAdminView() {
+            showScreen('adminScreen');
+
+            window.fs.onSnapshot(window.fs.collection(window.db, 'marketers'), snap => {
+                const tbody = document.getElementById('marketersTable');
+                const select = document.getElementById('selectMarketer');
+                tbody.innerHTML = '';
+                select.innerHTML = '<option value="">اختر المسوق</option>';
+
+                snap.forEach(docSnap => {
+                    const m = docSnap.data();
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${m.name}</td>
+                        <td><code>${m.code}</code></td>
+                        <td>${m.isLeader ? '<span style="color:var(--gold)">ليدر</span>' : 'مسوق'}</td>
+                        <td style="color:var(--accent); font-weight:600;">${m.balance || 0} ج.م</td>
+                        <td>
+                            <button class="btn-sm" onclick="toggleLeader('${docSnap.id}', ${!m.isLeader})">
+                                ${m.isLeader ? 'إلغاء الليدر' : 'ترقية لـ ليدر'}
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+
+                    const opt = document.createElement('option');
+                    opt.value = docSnap.id;
+                    opt.textContent = `${m.name} (${m.code})`;
+                    select.appendChild(opt);
+                });
+            });
+        }
+
+        async function addMarketer(e) {
+            e.preventDefault();
+            const name = document.getElementById('newMName').value.trim();
+            const code = document.getElementById('generatedCode').value.trim();
+
+            await window.fs.addDoc(window.fs.collection(window.db, 'marketers'), {
+                name: name,
+                code: code,
+                balance: 0,
+                isLeader: false
+            });
+
+            document.getElementById('newMName').value = '';
+            document.getElementById('generatedCode').value = '';
+            alert(`تم إنشاء حساب المسوق بنجاح!\nالاسم: ${name}\nالكود المشفر: ${code}`);
+        }
+
+        async function addCommission(e) {
+            e.preventDefault();
+            const mId = document.getElementById('selectMarketer').value;
+            const amount = parseFloat(document.getElementById('commAmount').value);
+
+            if (!mId) return;
+
+            const ref = window.fs.doc(window.db, 'marketers', mId);
+            await window.fs.runTransaction(window.db, async (transaction) => {
+                const docSnap = await transaction.get(ref);
+                if (!docSnap.exists()) return;
+                const newBal = (docSnap.data().balance || 0) + amount;
+                transaction.update(ref, { balance: newBal });
+            });
+
+            document.getElementById('clientName').value = '';
+            alert('تمت إضافة العمولة فوراً لحساب المسوق!');
+        }
+
+        async function toggleLeader(id, status) {
+            await window.fs.updateDoc(window.fs.doc(window.db, 'marketers', id), { isLeader: status });
+        }
+    </script>
+</body>
+</html>
