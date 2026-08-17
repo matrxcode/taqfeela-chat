@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تقفيلة | شبكة المسوقين المشفرة</title>
     
-    <!-- PWA Manifest & Theme -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#090a0f">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="تقفيلة">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Firebase CDNs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -41,341 +36,73 @@
             --font-main: 'Readex Pro', sans-serif;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-main);
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
 
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        .screen { display: none; width: 100%; }
+        .screen.active { display: block; }
 
-        .install-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 20px;
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
+        .auth-container { max-width: 400px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px 24px; }
+        .brand-header { text-align: center; margin-bottom: 24px; }
+        .brand-logo { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: rgba(37,99,235,.1); border: 1px solid rgba(37,99,235,.3); border-radius: var(--radius-md); color: var(--primary); font-weight: 700; font-size: 20px; margin-bottom: 12px; }
+        .brand-title { font-size: 20px; font-weight: 600; }
+        .brand-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-        .install-banner.show {
-            display: flex;
-        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+        .form-control { width: 100%; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; color: var(--text-main); font-size: 14px; outline: none; }
+        .form-control:focus { border-color: var(--border-focus); }
 
-        .install-btn {
-            padding: 8px 18px;
-            font-size: 13px;
-            background: var(--accent);
-            border: none;
-            border-radius: var(--radius-sm);
-            color: #fff;
-            cursor: pointer;
-            font-weight: 600;
-        }
+        .btn { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; }
+        .version-tag { text-align: center; margin-top: 20px; font-size: 11px; color: var(--text-dark); cursor: pointer; }
 
-        .screen {
-            display: none;
-            width: 100%;
-        }
+        .app-layout { max-width: 1000px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+        @media(max-width: 850px) { .app-layout { grid-template-columns: 1fr; } }
 
-        .screen.active {
-            display: block;
-        }
+        .sidebar-card, .main-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+        .profile-box { padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+        .profile-name { font-weight: 600; font-size: 16px; }
+        .profile-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 12px; background: rgba(255,255,255,.05); color: var(--text-muted); margin-top: 4px; border: 1px solid var(--border); }
 
-        .auth-container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 32px 24px;
-        }
+        .balance-box { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; }
+        .balance-label { font-size: 12px; color: var(--text-muted); }
+        .balance-val { font-size: 24px; font-weight: 700; color: var(--accent); margin-top: 4px; }
 
-        .brand-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
+        .chat-tabs { display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .tab-btn { padding: 8px 14px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; font-weight: 500; border-radius: var(--radius-sm); }
+        .tab-btn.active { background: rgba(37,99,235,.15); color: var(--primary); font-weight: 600; }
 
-        .brand-logo {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            background: rgba(37,99,235,.1);
-            border: 1px solid rgba(37,99,235,.3);
-            border-radius: var(--radius-md);
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 20px;
-            margin-bottom: 12px;
-        }
+        .chat-container { display: flex; flex-direction: column; height: 480px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; }
 
-        .brand-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
+        .msg { max-width: 85%; background: var(--bg-input); border: 1px solid var(--border); padding: 10px 12px; border-radius: var(--radius-md); font-size: 13px; position: relative; }
+        .msg.me { align-self: flex-start; background: rgba(37,99,235,.1); border-color: rgba(37,99,235,.3); }
 
-        .brand-sub {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
+        .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .msg-sender { font-weight: 600; color: var(--primary); font-size: 12px; cursor: pointer; text-decoration: underline; }
 
-        .form-group {
-            margin-bottom: 16px;
-        }
+        .msg-menu-btn { cursor: pointer; font-weight: bold; padding: 2px 6px; font-size: 14px; color: var(--text-muted); border-radius: 4px; }
+        .msg-dropdown { display: none; position: absolute; top: 28px; left: 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: 0 4px 12px rgba(0,0,0,.5); z-index: 10; width: 150px; overflow: hidden; }
+        .msg-dropdown.show { display: block; }
+        .dropdown-item { padding: 8px 12px; font-size: 11px; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .dropdown-item:hover { background: rgba(37,99,235,.2); }
 
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
+        .video-container { margin-top: 8px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); background: #000; }
+        .video-container iframe { width: 100%; height: 200px; border: none; display: block; }
 
-        .form-control {
-            width: 100%;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 12px 14px;
-            color: var(--text-main);
-            font-size: 14px;
-            outline: none;
-        }
+        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-input); color: var(--text-main); cursor: pointer; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .logout-link { font-size: 12px; color: var(--danger); cursor: pointer; }
 
-        .form-control:focus {
-            border-color: var(--border-focus);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .version-tag {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 11px;
-            color: var(--text-dark);
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .app-layout {
-            max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 20px;
-        }
-
-        @media(max-width: 850px) {
-            .app-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .sidebar-card, .main-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-        }
-
-        .profile-box {
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 16px;
-        }
-
-        .profile-name {
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .profile-badge {
-            display: inline-block;
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            background: rgba(255,255,255,.05);
-            color: var(--text-muted);
-            margin-top: 4px;
-            border: 1px solid var(--border);
-        }
-
-        .profile-badge.leader {
-            background: rgba(245,158,11,.1);
-            color: var(--gold);
-            border-color: rgba(245,158,11,.3);
-        }
-
-        .balance-box {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 16px;
-        }
-
-        .balance-label {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .balance-val {
-            font-size: 26px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-top: 4px;
-        }
-
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 480px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .msg {
-            max-width: 82%;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            padding: 10px 12px;
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            position: relative;
-        }
-
-        .msg.me {
-            align-self: flex-start;
-            background: rgba(37,99,235,.1);
-            border-color: rgba(37,99,235,.3);
-        }
-
-        .reply-quote {
-            background: rgba(255,255,255,.05);
-            border-right: 3px solid var(--primary);
-            padding: 4px 8px;
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            border-radius: 4px;
-        }
-
-        .msg-actions {
-            display: flex;
-            gap: 8px;
-            font-size: 10px;
-            margin-top: 6px;
-            justify-content: flex-end;
-        }
-
-        .msg-act-btn {
-            color: var(--text-muted);
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .msg-act-btn.del {
-            color: var(--danger);
-        }
-
-        .reply-preview-bar {
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-input);
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            color: var(--gold);
-            margin-bottom: 6px;
-            border: 1px dashed var(--border);
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            margin-top: 12px;
-        }
-
-        .data-table th, .data-table td {
-            padding: 12px;
-            text-align: right;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .data-table th {
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: var(--bg-input);
-            color: var(--text-main);
-            cursor: pointer;
-        }
-
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logout-link {
-            font-size: 12px;
-            color: var(--danger);
-            cursor: pointer;
-        }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7); align-items: center; justify-content: center; z-index: 100; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; width: 90%; max-width: 360px; }
+        .modal-header { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .seen-list { max-height: 200px; overflow-y: auto; font-size: 12px; }
+        .seen-item { padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; color: var(--text-muted); }
     </style>
 </head>
 <body>
-
-    <!-- PWA INSTALL BANNER -->
-    <div id="installBanner" class="install-banner">
-        <span style="font-size: 13px;">📲 ثبّت تطبيق تقفيلة الآن على جهازك</span>
-        <button class="install-btn" onclick="triggerPWAInstall()">تثبيت التطبيق</button>
-    </div>
 
     <!-- AUTH SCREEN -->
     <div id="authScreen" class="screen active">
@@ -396,8 +123,7 @@
                 </div>
                 <button type="submit" class="btn">دخول اللوحة</button>
             </form>
-            
-            <div class="version-tag" onclick="handleSecretAdminClick()">إصدار النظام v1.0.0</div>
+            <div class="version-tag" onclick="handleSecretAdminClick()">إصدار النظام v2.3.0</div>
         </div>
     </div>
 
@@ -411,23 +137,38 @@
                         <span class="logout-link" onclick="logout()">خروج</span>
                     </div>
                     <div id="dispBadge" class="profile-badge">مسوق</div>
-                    <div style="font-size: 11px; color: var(--text-dark); margin-top: 6px;" id="dispCode">--</div>
                 </div>
+                
                 <div class="balance-box">
                     <div class="balance-label">الرصيد الحالي</div>
                     <div class="balance-val" id="dispBalance">0 ج.م</div>
                 </div>
+
+                <div class="form-group">
+                    <label>الكنية (اسم الشهرة/اللقب)</label>
+                    <input type="text" id="mNickInput" class="form-control" placeholder="مثال: أبو شهاب" style="font-size: 12px;">
+                    <button class="btn-sm" style="width:100%; margin-top:6px;" onclick="updateNickname()">حفظ الكنية</button>
+                </div>
             </div>
+
             <div class="main-card">
-                <div class="brand-title" style="font-size: 16px; margin-bottom: 12px;">الشات الجماعي</div>
-                <div class="chat-container">
+                <div class="chat-tabs">
+                    <button class="tab-btn active" id="tabPublic" onclick="switchChatTab('public')">🌐 الشات العام</button>
+                    <button class="tab-btn" id="tabPrivate" onclick="switchChatTab('private')">💬 شات خاص <span id="dmTargetLabel"></span></button>
+                </div>
+
+                <div id="publicChatView" class="chat-container">
                     <div class="chat-messages" id="chatMsgs"></div>
-                    <div id="replyPreviewBar" class="reply-preview-bar">
-                        <span id="replyPreviewText">رد على: ...</span>
-                        <span style="cursor:pointer;" onclick="cancelReply()">✕</span>
-                    </div>
-                    <form style="display:flex; gap:8px;" onsubmit="sendChat(event)">
-                        <input type="text" id="msgText" class="form-control" placeholder="اكتب رسالتك..." required>
+                    <form style="display:flex; gap:8px;" onsubmit="sendPublicChat(event)">
+                        <input type="text" id="msgText" class="form-control" placeholder="اكتب رسالتك أو ضع رابط فيديو..." required>
+                        <button type="submit" class="btn" style="width: 80px;">إرسال</button>
+                    </form>
+                </div>
+
+                <div id="privateChatView" class="chat-container" style="display:none;">
+                    <div class="chat-messages" id="dmMsgs"></div>
+                    <form style="display:flex; gap:8px;" onsubmit="sendPrivateChat(event)">
+                        <input type="text" id="dmMsgText" class="form-control" placeholder="رسالة خاصة..." required>
                         <button type="submit" class="btn" style="width: 80px;">إرسال</button>
                     </form>
                 </div>
@@ -435,66 +176,18 @@
         </div>
     </div>
 
-    <!-- ADMIN DASHBOARD -->
-    <div id="adminScreen" class="screen">
-        <div class="app-layout" style="grid-template-columns: 1fr;">
-            <div class="main-card">
-                <div class="flex-between" style="margin-bottom: 20px;">
-                    <div>
-                        <div class="brand-title">لوحة إدارة المسوقين والعمولات</div>
-                        <div class="brand-sub">إضافة مسوقين جدد، تحويل الليدرز، وتحديد العمولات</div>
-                    </div>
-                    <button class="btn-sm" onclick="logout()">تسجيل الخروج</button>
-                </div>
-
-                <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px;">
-                    <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">إضافة مسوق جديد</div>
-                    <form style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px;" onsubmit="addMarketer(event)">
-                        <input type="text" id="newMName" class="form-control" placeholder="الاسم الثنائي" required>
-                        <input type="text" id="generatedCode" class="form-control" placeholder="الكود (تلقائي)" readonly>
-                        <button type="submit" class="btn" style="padding: 0 20px;">إنشاء الكود</button>
-                    </form>
-                </div>
-
-                <div style="background: var(--bg-input); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 20px;">
-                    <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">تسجيل عملية عمولة</div>
-                    <form style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px;" onsubmit="addCommission(event)">
-                        <select id="selectMarketer" class="form-control" required><option value="">اختر المسوق</option></select>
-                        <input type="text" id="clientName" class="form-control" placeholder="اسم العميل" required>
-                        <input type="number" id="commAmount" class="form-control" value="200" required>
-                        <button type="submit" class="btn" style="background: var(--accent); padding: 0 20px;">إضافة للرصيد</button>
-                    </form>
-                </div>
-
-                <div style="font-size: 14px; font-weight: 600; margin-top: 10px;">قائمة المسوقين المسجلين</div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>الاسم</th>
-                            <th>الكود</th>
-                            <th>الرتبة</th>
-                            <th>الرصيد الحالي</th>
-                            <th>إجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="marketersTable"></tbody>
-                </table>
+    <!-- MODAL POPUP FOR MESSAGE INFO -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>معلومات الرسالة (من شاهدها)</span>
+                <span style="cursor:pointer;" onclick="closeModal()">✕</span>
             </div>
+            <div id="seenList" class="seen-list"></div>
         </div>
     </div>
 
-    <!-- SCRIPT LOGIC -->
     <script>
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('SW Registered successfully:', reg.scope))
-                    .catch(err => console.error('SW Registration failed:', err));
-            });
-        }
-
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyACL2nG7OdUuU4HRippr7P46OJpPpDYf5g",
             authDomain: "squadly-bb782.firebaseapp.com",
@@ -507,55 +200,30 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        const ADMIN_PASS = "01224815487";
-        let clickCount = 0;
-        let clickTimer = null;
-        let deferredPrompt = null;
         let currentUser = null;
-        let activeReplyTarget = null;
-
-        function handleSecretAdminClick() {
-            clickCount++;
-            clearTimeout(clickTimer);
-            if (clickCount >= 5) {
-                clickCount = 0;
-                const pass = prompt("أدخل كلمة المرور الخاصة بلوحة التحكم:");
-                if (pass === ADMIN_PASS) {
-                    initAdminView();
-                } else if (pass !== null) {
-                    alert("كلمة المرور غير صحيحة!");
-                }
-            } else {
-                clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
-            }
-        }
-
-        // PWA Installation Trigger Logic
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            const banner = document.getElementById('installBanner');
-            if (banner) banner.classList.add('show');
-        });
-
-        function triggerPWAInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choice) => {
-                    if (choice.outcome === 'accepted') {
-                        const banner = document.getElementById('installBanner');
-                        if (banner) banner.classList.remove('show');
-                    }
-                    deferredPrompt = null;
-                });
-            }
-        }
+        let activeDmTarget = null;
 
         const encData = (str) => btoa(encodeURIComponent(str));
-        const decData = (str) => {
-            try { return decodeURIComponent(atob(str)); }
-            catch(e) { return str; }
-        };
+        const decData = (str) => { try { return decodeURIComponent(atob(str)); } catch(e) { return str; } };
+
+        // --- SMART PHONE FILTER ENGINE ---
+        function containsPhoneNumber(text) {
+            // 1. If user is Leader or Admin, bypass filter
+            if (currentUser && currentUser.isLeader) return false;
+
+            // 2. Clean text from spaces, hyphens, and dots to detect trick attempts like (010 123 4567)
+            const cleanText = text.replace(/[\s\-\.\_\,\/\\()\+]/g, '');
+
+            // 3. Strict Egyptian Phone Patterns (010, 011, 012, 015)
+            const egPhoneRegex = /(010|011|012|015)[0-9]{8}/;
+            if (egPhoneRegex.test(cleanText)) return true;
+
+            // 4. Any continuous sequence of 10 to 11 digits that looks like a phone number
+            const generalPhoneRegex = /[0-9]{10,11}/;
+            if (generalPhoneRegex.test(cleanText)) return true;
+
+            return false;
+        }
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -568,74 +236,86 @@
             const code = document.getElementById('mCode').value.trim().toUpperCase();
 
             db.collection('marketers').where('code', '==', code).get().then((snapshot) => {
-                if (snapshot.empty) {
-                    alert('الكود التعريفي غير صحيح');
-                    return;
-                }
+                if (snapshot.empty) return alert('الكود التعريفي غير صحيح');
                 let userFound = null;
                 snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    if (data.name === name) {
-                        userFound = { id: docSnap.id, ...data };
-                    }
+                    if (docSnap.data().name === name) userFound = { id: docSnap.id, ...docSnap.data() };
                 });
 
-                if (!userFound) {
-                    alert('الاسم غير مطابق للكود المسجل');
-                    return;
-                }
-
+                if (!userFound) return alert('الاسم غير مطابق للكود المسجل');
                 currentUser = userFound;
                 initMarketerView();
-            }).catch((error) => {
-                alert('حدث خطأ في الاتصال بقاعدة البيانات');
             });
         }
 
-        function logout() {
-            currentUser = null;
-            showScreen('authScreen');
-        }
+        function logout() { currentUser = null; showScreen('authScreen'); }
 
         function initMarketerView() {
             showScreen('marketerScreen');
-            document.getElementById('dispName').textContent = currentUser.name;
-            document.getElementById('dispCode').textContent = currentUser.code;
-            
-            const badge = document.getElementById('dispBadge');
-            badge.textContent = currentUser.isLeader ? 'ليدر الفريق' : 'مسوق';
-            if (currentUser.isLeader) badge.classList.add('leader');
-            else badge.classList.remove('leader');
+            document.getElementById('dispName').textContent = currentUser.nickname ? `${currentUser.name} (${currentUser.nickname})` : currentUser.name;
+            document.getElementById('dispBadge').textContent = currentUser.isLeader ? 'ليدر الفريق' : 'مسوق';
+            if (currentUser.nickname) document.getElementById('mNickInput').value = currentUser.nickname;
 
-            db.collection('marketers').doc(currentUser.id).onSnapshot((docSnap) => {
-                if (docSnap.exists) {
-                    document.getElementById('dispBalance').textContent = `${docSnap.data().balance || 0} ج.م`;
-                }
+            loadPublicChat();
+        }
+
+        function updateNickname() {
+            const nick = document.getElementById('mNickInput').value.trim();
+            db.collection('marketers').doc(currentUser.id).update({ nickname: nick }).then(() => {
+                currentUser.nickname = nick;
+                document.getElementById('dispName').textContent = nick ? `${currentUser.name} (${nick})` : currentUser.name;
+                alert("تم حفظ الكنية بنجاح!");
             });
+        }
 
+        function parseMediaAndText(text) {
+            const screenAppRegex = /(https?:\/\/screenapp\.io\/app\/v\/[a-zA-Z0-9]+)/g;
+            const youtubeRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)|https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+))/g;
+
+            let html = text;
+            let videoEmbed = '';
+
+            if (screenAppRegex.test(text)) {
+                const match = text.match(screenAppRegex)[0];
+                const videoId = match.split('/v/')[1];
+                videoEmbed = `<div class="video-container"><iframe src="https://screenapp.io/app/v/${videoId}" allowfullscreen></iframe></div>`;
+            } else if (youtubeRegex.test(text)) {
+                const match = text.match(youtubeRegex)[0];
+                let ytId = match.includes('v=') ? match.split('v=')[1].split('&')[0] : match.split('/').pop();
+                videoEmbed = `<div class="video-container"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>`;
+            }
+
+            return { textHtml: html, videoEmbed };
+        }
+
+        // --- PUBLIC CHAT ---
+        function loadPublicChat() {
             db.collection('chat').orderBy('timestamp', 'asc').limit(50).onSnapshot((snapshot) => {
                 const chatContainer = document.getElementById('chatMsgs');
                 chatContainer.innerHTML = '';
+                
                 snapshot.forEach(msgDoc => {
+                    const msgId = msgDoc.id;
                     const data = msgDoc.data();
-                    const isMe = currentUser && currentUser.code === data.senderCode;
-                    const text = decData(data.textEncrypted || '');
+                    const isMe = currentUser && currentUser.id === data.senderId;
+                    const rawText = decData(data.textEncrypted || '');
+                    const { textHtml, videoEmbed } = parseMediaAndText(rawText);
+
+                    const displayName = data.senderNickname ? `${data.senderName} (${data.senderNickname})` : data.senderName;
 
                     const msgDiv = document.createElement('div');
                     msgDiv.className = `msg ${isMe ? 'me' : ''}`;
                     
-                    let replyHtml = data.replyTo ? `<div class="reply-quote">رد على: ${decData(data.replyToText)}</div>` : '';
-                    let deleteBtnHtml = isMe ? `<span class="msg-act-btn del" onclick="deleteMyMsg('${msgDoc.id}')">حذف</span>` : '';
-
                     msgDiv.innerHTML = `
-                        ${replyHtml}
-                        <div style="font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">
-                            ${data.senderName} ${data.isLeader ? '⚡ [ليدر]' : ''}
+                        <div class="msg-header">
+                            <span class="msg-sender" onclick="startPrivateChat('${data.senderId}', '${displayName}')">${displayName} 💬</span>
+                            <span class="msg-menu-btn" onclick="toggleMsgMenu(event, '${msgId}')">⋮</span>
                         </div>
-                        <div>${text}</div>
-                        <div class="msg-actions">
-                            <span class="msg-act-btn" onclick="setReply('${data.senderName}', '${text.replace(/'/g, "\\'")}')">رد</span>
-                            ${deleteBtnHtml}
+                        <div>${textHtml}</div>
+                        ${videoEmbed}
+
+                        <div id="menu-${msgId}" class="msg-dropdown">
+                            <div class="dropdown-item" onclick="openMsgInfo('${msgId}')">ℹ️ معلومات الرسالة</div>
                         </div>
                     `;
                     chatContainer.appendChild(msgDiv);
@@ -644,124 +324,111 @@
             });
         }
 
-        function setReply(author, text) {
-            activeReplyTarget = { author, text };
-            document.getElementById('replyPreviewText').textContent = `رد على (${author}): ${text.substring(0, 20)}...`;
-            document.getElementById('replyPreviewBar').style.display = 'flex';
+        function toggleMsgMenu(e, msgId) {
+            e.stopPropagation();
+            document.querySelectorAll('.msg-dropdown').forEach(d => d.classList.remove('show'));
+            const menu = document.getElementById(`menu-${msgId}`);
+            if (menu) menu.classList.toggle('show');
         }
 
-        function cancelReply() {
-            activeReplyTarget = null;
-            document.getElementById('replyPreviewBar').style.display = 'none';
+        function startPrivateChat(userId, userName) {
+            if (userId === currentUser.id) return;
+            activeDmTarget = { id: userId, name: userName };
+            document.getElementById('dmTargetLabel').textContent = `(${userName})`;
+            switchChatTab('private');
+            loadPrivateMessages();
         }
 
-        async function sendChat(e) {
+        function switchChatTab(type) {
+            document.getElementById('tabPublic').classList.toggle('active', type === 'public');
+            document.getElementById('tabPrivate').classList.toggle('active', type === 'private');
+            document.getElementById('publicChatView').style.display = type === 'public' ? 'flex' : 'none';
+            document.getElementById('privateChatView').style.display = type === 'private' ? 'flex' : 'none';
+        }
+
+        function loadPrivateMessages() {
+            if (!activeDmTarget) return;
+            const chatKey = [currentUser.id, activeDmTarget.id].sort().join('_');
+
+            db.collection('private_chats').doc(chatKey).collection('messages')
+                .orderBy('timestamp', 'asc').onSnapshot((snapshot) => {
+                    const dmContainer = document.getElementById('dmMsgs');
+                    dmContainer.innerHTML = '';
+                    snapshot.forEach(msgDoc => {
+                        const data = msgDoc.data();
+                        const isMe = currentUser.id === data.senderId;
+                        const rawText = decData(data.textEncrypted);
+                        const { textHtml, videoEmbed } = parseMediaAndText(rawText);
+
+                        const div = document.createElement('div');
+                        div.className = `msg ${isMe ? 'me' : ''}`;
+                        div.innerHTML = `<div>${textHtml}</div>${videoEmbed}`;
+                        dmContainer.appendChild(div);
+                    });
+                    dmContainer.scrollTop = dmContainer.scrollHeight;
+                });
+        }
+
+        async function sendPrivateChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('dmMsgText');
+            const text = input.value.trim();
+            if (!text || !activeDmTarget) return;
+
+            // CHECK PHONE FILTER FOR PRIVATE MESSAGES
+            if (containsPhoneNumber(text)) {
+                return alert("⚠️ يمنع إرسال أرقام الهواتف حفاظاً على خصوصية الشبكة.");
+            }
+
+            const chatKey = [currentUser.id, activeDmTarget.id].sort().join('_');
+            await db.collection('private_chats').doc(chatKey).collection('messages').add({
+                senderId: currentUser.id,
+                textEncrypted: encData(text),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            input.value = '';
+        }
+
+        async function sendPublicChat(e) {
             e.preventDefault();
             const textInput = document.getElementById('msgText');
             const text = textInput.value.trim();
             if (!text) return;
 
-            const msgObj = {
+            // CHECK PHONE FILTER FOR PUBLIC CHAT
+            if (containsPhoneNumber(text)) {
+                return alert("⚠️ يمنع إرسال أرقام الهواتف في الشات العام.");
+            }
+
+            await db.collection('chat').add({
+                senderId: currentUser.id,
                 senderName: currentUser.name,
-                senderCode: currentUser.code,
-                isLeader: currentUser.isLeader || false,
+                senderNickname: currentUser.nickname || '',
                 textEncrypted: encData(text),
+                seenBy: [currentUser.name],
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            if (activeReplyTarget) {
-                msgObj.replyTo = activeReplyTarget.author;
-                msgObj.replyToText = encData(activeReplyTarget.text);
-            }
-
-            await db.collection('chat').add(msgObj);
+            });
             textInput.value = '';
-            cancelReply();
         }
 
-        async function deleteMyMsg(msgId) {
-            if (confirm("هل تريد حذف هذه الرسالة من الشات؟")) {
-                await db.collection('chat').doc(msgId).delete();
-            }
-        }
-
-        function initAdminView() {
-            showScreen('adminScreen');
-            db.collection('marketers').onSnapshot((snapshot) => {
-                const tableBody = document.getElementById('marketersTable');
-                const selectList = document.getElementById('selectMarketer');
-                tableBody.innerHTML = '';
-                selectList.innerHTML = '<option value="">اختر المسوق</option>';
-
-                snapshot.forEach(mDoc => {
-                    const data = mDoc.data();
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${data.name}</td>
-                        <td><code>${data.code}</code></td>
-                        <td>${data.isLeader ? '<span style="color:var(--gold)">ليدر</span>' : 'مسوق'}</td>
-                        <td style="color:var(--accent); font-weight:600;">${data.balance || 0} ج.م</td>
-                        <td>
-                            <button class="btn-sm" onclick="toggleLeader('${mDoc.id}', ${!data.isLeader})">
-                                ${data.isLeader ? 'إلغاء الليدر' : 'ترقية لـ ليدر'}
-                            </button>
-                        </td>
-                    `;
-                    tableBody.appendChild(tr);
-
-                    const opt = document.createElement('option');
-                    opt.value = mDoc.id;
-                    opt.textContent = `${data.name} (${data.code})`;
-                    selectList.appendChild(opt);
+        function openMsgInfo(msgId) {
+            db.collection('chat').doc(msgId).get().then(docSnap => {
+                if (!docSnap.exists) return;
+                const seenList = docSnap.data().seenBy || [];
+                const container = document.getElementById('seenList');
+                container.innerHTML = '';
+                seenList.forEach(name => {
+                    const div = document.createElement('div');
+                    div.className = 'seen-item';
+                    div.innerHTML = `<span>👤 ${name}</span><span style="color:var(--accent);">تم الاطلاع</span>`;
+                    container.appendChild(div);
                 });
+                document.getElementById('infoModal').classList.add('active');
             });
         }
 
-        document.getElementById('newMName')?.addEventListener('input', () => {
-            if (!document.getElementById('generatedCode').value) {
-                const randomNum = Math.floor(1000 + Math.random() * 9000);
-                document.getElementById('generatedCode').value = `M-${randomNum}`;
-            }
-        });
-
-        async function addMarketer(e) {
-            e.preventDefault();
-            const name = document.getElementById('newMName').value.trim();
-            const code = document.getElementById('generatedCode').value.trim();
-
-            await db.collection('marketers').add({
-                name: name,
-                code: code,
-                balance: 0,
-                isLeader: false
-            });
-
-            document.getElementById('newMName').value = '';
-            document.getElementById('generatedCode').value = '';
-            alert(`تم إنشاء حساب المسوق بنجاح!\nالاسم: ${name}\nالكود: ${code}`);
-        }
-
-        async function addCommission(e) {
-            e.preventDefault();
-            const mId = document.getElementById('selectMarketer').value;
-            const amount = parseFloat(document.getElementById('commAmount').value);
-
-            if (!mId) return;
-
-            const mRef = db.collection('marketers').doc(mId);
-            await db.runTransaction(async (transaction) => {
-                const sfDoc = await transaction.get(mRef);
-                if (!sfDoc.exists) return;
-                const newBalance = (sfDoc.data().balance || 0) + amount;
-                transaction.update(mRef, { balance: newBalance });
-            });
-
-            document.getElementById('clientName').value = '';
-            alert('تمت إضافة العمولة فوراً لحساب المسوق!');
-        }
-
-        async function toggleLeader(mId, newStatus) {
-            await db.collection('marketers').doc(mId).update({ isLeader: newStatus });
+        function closeModal() {
+            document.getElementById('infoModal').classList.remove('active');
         }
     </script>
 </body>
